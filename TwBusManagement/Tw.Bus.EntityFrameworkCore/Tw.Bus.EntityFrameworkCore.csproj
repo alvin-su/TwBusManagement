@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="1.1.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tw.Bus.Common\Tw.Bus.Common.csproj" />
+    <ProjectReference Include="..\Tw.Bus.Entity\Tw.Bus.Entity.csproj" />
+    <ProjectReference Include="..\Tw.Bus.IRepository\Tw.Bus.IRepository.csproj" />
+  </ItemGroup>
+
+</Project>
