@@ -32,6 +32,7 @@ namespace Tw.Bus.WebApi.Controllers
         public async Task<string> GetAllUser()
         {
             var users = await _userRepository.GetAllListAsync();
+
             var dtos = AutoMapper.Mapper.Map<IEnumerable<UserDto>>(users);
             return Common.JsonHelper.SerializeObject(dtos);
         }
