@@ -13,6 +13,10 @@ using Tw.Bus.IRepository;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+using Tw.Bus.WebApi.JwtOptions;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Tw.Bus.WebApi.Filters;
 
 namespace Tw.Bus.WebApi
 {
@@ -65,7 +69,27 @@ namespace Tw.Bus.WebApi
                 var xmlPath = Path.Combine(basePath, "twbusapi.xml");
                 c.IncludeXmlComments(xmlPath);
 
-               // c.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
+                c.OperationFilter<HttpHeaderOperationFilter>(); // 添加httpHeader参数
+            });
+
+            // Get options from app settings
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
+            // Add JWT　Protection
+            var secretKey = jwtAppSettingOptions[nameof(JwtIssuerOptions.SecretKey)];
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+
+            // Configure JwtIssuerOptions
+            services.Configure<JwtIssuerOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+
+                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+                // options.ValidFor = TimeSpan.FromMinutes(20); //Token有效期
+
+                options.ValidFor = TimeSpan.FromMinutes(Convert.ToInt32(jwtAppSettingOptions[nameof(JwtIssuerOptions.ValidFor)]));
+
             });
 
         }
@@ -84,6 +108,39 @@ namespace Tw.Bus.WebApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TwBusManagement API V1");
                 c.ShowRequestHeaders();
+            });
+
+
+            //jwt相关配置
+            //这个配置一定要加载UseMvc之前!!!
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
+
+            var secretKey = jwtAppSettingOptions[nameof(JwtIssuerOptions.SecretKey)];
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+
+                ValidateAudience = true,
+                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero,
+
+            };
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = tokenValidationParameters
             });
 
             app.UseMvc();

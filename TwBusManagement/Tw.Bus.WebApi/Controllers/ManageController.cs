@@ -9,6 +9,7 @@ using Tw.Bus.EntityFrameworkCore;
 using Tw.Bus.Entity;
 using Tw.Bus.EntityDTO;
 using Tw.Bus.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tw.Bus.WebApi.Controllers
 {
@@ -24,15 +25,16 @@ namespace Tw.Bus.WebApi.Controllers
         }
 
         /// <summary>
-        /// 得到所有用户信息
+        /// 获取所有用户信息，加入Jwt认证（需先请求接口api/authtoken），需要在请求Headers 中加入 Authorization:Bearer 获取的Token值
+        /// 还需在请求Headers的中加入 Content-Type:application/json
         /// </summary>
         /// <returns></returns>
-        [Route("api/GetAllUser")]
+        [Route("api/queryalluser")]
         [HttpGet]
+        [Authorize]
         public async Task<string> GetAllUser()
         {
             var users = await _userRepository.GetAllListAsync();
-
             var dtos = AutoMapper.Mapper.Map<IEnumerable<UserDto>>(users);
             return Common.JsonHelper.SerializeObject(dtos);
         }

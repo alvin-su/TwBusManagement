@@ -7,6 +7,6 @@ namespace Tw.Bus.IRepository
 {
     public interface IUsyUserRepository: IRepository<Usy_User, int>
     {
-
+        
     }
 }
