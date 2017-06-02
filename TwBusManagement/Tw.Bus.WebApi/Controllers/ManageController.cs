@@ -10,6 +10,8 @@ using Tw.Bus.Entity;
 using Tw.Bus.EntityDTO;
 using Tw.Bus.Common;
 using Microsoft.AspNetCore.Authorization;
+using Tw.Bus.WebApi.Filters;
+using Tw.Bus.WebApi.Models;
 
 namespace Tw.Bus.WebApi.Controllers
 {
@@ -30,7 +32,7 @@ namespace Tw.Bus.WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("api/queryalluser")]
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         public async Task<string> GetAllUser()
         {
@@ -38,5 +40,8 @@ namespace Tw.Bus.WebApi.Controllers
             var dtos = AutoMapper.Mapper.Map<IEnumerable<UserDto>>(users);
             return Common.JsonHelper.SerializeObject(dtos);
         }
+
+
+
     }
 }

@@ -44,6 +44,27 @@ namespace Tw.Bus.WebApi
             //添加 可配置功能
             services.AddOptions();
 
+            var arrAllowSpecificOrigin = Configuration.GetSection("AllowSpecificOrigin")?.Value.Split(',');
+
+            //添加跨域资源请求访问
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                  builder => builder.WithOrigins(arrAllowSpecificOrigin)
+                                       .AllowAnyHeader()
+                                       .AllowAnyMethod()
+                                       .AllowCredentials());
+
+                //options.AddPolicy("AllowAllOrigins",
+                //      builder =>
+                //      {
+                //          builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                //      });
+
+
+            });
+
+
             //依赖注入
             AddDependencies(services);
 
@@ -99,6 +120,15 @@ namespace Tw.Bus.WebApi
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+
+            // 注释下面这句表示不启用全局CORS中间件，在控制器中单独实现，
+            //可在控制器中添加 [EnableCors("AllowSpecificOrigin")] 特性
+            app.UseCors("AllowSpecificOrigin");
+            //app.UseCors("AllowAllOrigins");
+
+
+           // Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

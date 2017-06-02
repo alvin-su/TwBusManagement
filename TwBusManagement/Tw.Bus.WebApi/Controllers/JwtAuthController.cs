@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Tw.Bus.WebApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using Tw.Bus.Common;
+using Tw.Bus.WebApi.Filters;
 
 namespace Tw.Bus.WebApi.Controllers
 {
@@ -76,20 +77,18 @@ namespace Tw.Bus.WebApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/authtoken")]
-        public async Task<IActionResult> GetToken([FromBody] ApplicationUser applicationUser)
+        [TypeFilter(typeof(TwBusResourceFilter))]
+        public async Task<IActionResult> GetToken([FromBody]ApplicationUser applicationUser)
         {
 
             #region 测试的时候使用
 
-
-            string strMd5Password=SecurityUtility.GetMd5Hash(applicationUser.Password).ToUpper();
+            string strMd5Password = SecurityUtility.GetMd5Hash(applicationUser.Password).ToUpper();
 
             applicationUser.Password = strMd5Password;
 
             #endregion
-
-
-          var identity = await LoginValidate(applicationUser);
+            var identity = await LoginValidate(applicationUser);
             if (identity == null)
             {
                 // log.Info($"Invalid username({applicationUser}) or password({applicationUser.Password}");
