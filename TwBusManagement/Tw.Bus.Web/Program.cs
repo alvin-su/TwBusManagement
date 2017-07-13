@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore;
 
 namespace Tw.Bus.Web
 {
@@ -17,17 +18,14 @@ namespace Tw.Bus.Web
                .AddJsonFile("hosting.json", optional: true)
                .Build();
 
-
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseConfiguration(config)
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
-
-            host.Run();
+            BuildWebHost(args,config).Run();
         }
+
+        public static IWebHost BuildWebHost(string[] args,IConfigurationRoot config) =>
+
+          WebHost.CreateDefaultBuilder(args)
+              .UseStartup<Startup>()
+              .UseConfiguration(config)
+              .Build();
     }
 }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
 
 namespace Tw.Bus.WebApi
 {
@@ -13,21 +15,15 @@ namespace Tw.Bus.WebApi
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-              .SetBasePath(Directory.GetCurrentDirectory())
-              .AddJsonFile("hosting.json", optional: true)
-              .Build();
+            BuildWebHost(args).Run();
 
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseConfiguration(config)
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
-
-            host.Run();
+            //初始化映射关系
+            TwBusDataMapper.InitializeDto();
         }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .Build();
     }
 }
