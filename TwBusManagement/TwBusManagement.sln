@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26711.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.Web", "Tw.Bus.Web\Tw.Bus.Web.csproj", "{20604726-D862-4170-A7E7-8A690DABB201}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.Web", "Tw.Bus.Web\Tw.Bus.Web.csproj", "{20604726-D862-4170-A7E7-8A690DABB201}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Client", "01.Client", "{8432587C-3C3D-4576-944C-836D0E0F8113}"
 EndProject
@@ -11,21 +11,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.Infrastructure", "04.Inf
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Domain", "03.Domain", "{5503CCF6-619C-40DF-9A0C-26FB3A847BC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.Entity", "Tw.Bus.Entity\Tw.Bus.Entity.csproj", "{2BF2BC45-D0E6-4DEE-AC59-C815582DCD57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.Entity", "Tw.Bus.Entity\Tw.Bus.Entity.csproj", "{2BF2BC45-D0E6-4DEE-AC59-C815582DCD57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.EntityFrameworkCore", "Tw.Bus.EntityFrameworkCore\Tw.Bus.EntityFrameworkCore.csproj", "{778ABF1D-6700-428A-9703-132E3CE9818D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.EntityFrameworkCore", "Tw.Bus.EntityFrameworkCore\Tw.Bus.EntityFrameworkCore.csproj", "{778ABF1D-6700-428A-9703-132E3CE9818D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.IRepository", "Tw.Bus.IRepository\Tw.Bus.IRepository.csproj", "{80DFDB40-584B-4153-824A-672EAD2570CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.IRepository", "Tw.Bus.IRepository\Tw.Bus.IRepository.csproj", "{80DFDB40-584B-4153-824A-672EAD2570CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.Common", "Tw.Bus.Common\Tw.Bus.Common.csproj", "{1C66D753-9617-4FC2-8CC2-EA0959E8EEDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.Common", "Tw.Bus.Common\Tw.Bus.Common.csproj", "{1C66D753-9617-4FC2-8CC2-EA0959E8EEDE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Application", "02.Application", "{9B5F477E-9792-4916-AF84-EC3A41C7F471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.WebApi", "Tw.Bus.WebApi\Tw.Bus.WebApi.csproj", "{05856EC0-F8BC-48D2-B8F3-BDDA1930BE80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.WebApi", "Tw.Bus.WebApi\Tw.Bus.WebApi.csproj", "{05856EC0-F8BC-48D2-B8F3-BDDA1930BE80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.EntityDTO", "Tw.Bus.EntityDTO\Tw.Bus.EntityDTO.csproj", "{A1F4E1C4-3DEB-4B61-A0D5-8E6663EB9AD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tw.Bus.EntityDTO", "Tw.Bus.EntityDTO\Tw.Bus.EntityDTO.csproj", "{A1F4E1C4-3DEB-4B61-A0D5-8E6663EB9AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{733B2C27-35E3-4445-9AD9-518C6CD7DB81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{733B2C27-35E3-4445-9AD9-518C6CD7DB81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tw.Bus.Cache", "Tw.Bus.Cache\Tw.Bus.Cache.csproj", "{329E7F4F-6EC0-4A2B-9742-44C470023405}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{733B2C27-35E3-4445-9AD9-518C6CD7DB81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{733B2C27-35E3-4445-9AD9-518C6CD7DB81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{733B2C27-35E3-4445-9AD9-518C6CD7DB81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{329E7F4F-6EC0-4A2B-9742-44C470023405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{329E7F4F-6EC0-4A2B-9742-44C470023405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{329E7F4F-6EC0-4A2B-9742-44C470023405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{329E7F4F-6EC0-4A2B-9742-44C470023405}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +84,9 @@ Global
 		{05856EC0-F8BC-48D2-B8F3-BDDA1930BE80} = {9B5F477E-9792-4916-AF84-EC3A41C7F471}
 		{A1F4E1C4-3DEB-4B61-A0D5-8E6663EB9AD6} = {9B5F477E-9792-4916-AF84-EC3A41C7F471}
 		{733B2C27-35E3-4445-9AD9-518C6CD7DB81} = {8432587C-3C3D-4576-944C-836D0E0F8113}
+		{329E7F4F-6EC0-4A2B-9742-44C470023405} = {7F74C598-A38F-4B02-91C4-53889821AD1C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F06E507-1620-44DC-A8E7-37078A2DC3E7}
 	EndGlobalSection
 EndGlobal

@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Tw.Bus.Cache\Tw.Bus.Cache.csproj" />
     <ProjectReference Include="..\Tw.Bus.EntityDTO\Tw.Bus.EntityDTO.csproj" />
     <ProjectReference Include="..\Tw.Bus.EntityFrameworkCore\Tw.Bus.EntityFrameworkCore.csproj" />
   </ItemGroup>

@@ -22,6 +22,9 @@ using Tw.Bus.WebApi.Filters;
 using log4net.Config;
 using log4net;
 using log4net.Repository;
+using Tw.Bus.Cache;
+using Microsoft.Extensions.Caching.Redis;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Tw.Bus.WebApi
 {
@@ -81,10 +84,30 @@ namespace Tw.Bus.WebApi
             AddDependencies(services);
 
             //添加数据上下文
-            services.AddDbContext<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));        
+            services.AddDbContext<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));
+
+            services.AddMemoryCache();
 
             // Add framework services.
             services.AddMvc();
+
+
+            //添加Redis分布式缓存
+            services.AddSingleton(typeof(IRedisCacheService), new RedisCacheService(new RedisCacheOptions
+            {
+
+                Configuration = Configuration.GetConnectionString("RedisConnection"),
+                InstanceName = "TwBus"
+
+            }, 0));
+
+            //添加内存缓存
+            services.AddSingleton<IMemoryCache>(factory =>
+            {
+                var cache = new MemoryCache(new MemoryCacheOptions());
+                return cache;
+            });
+            services.AddSingleton<ICacheService, MemoryCacheService>();
 
             services.AddSwaggerGen(c =>
             {
