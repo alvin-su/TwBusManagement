@@ -37,7 +37,7 @@ namespace Tw.Bus.WebApi.Controllers
         /// <returns></returns>
         [Route("api/queryalluser")]
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<string> GetAllUser()
         {
             try
