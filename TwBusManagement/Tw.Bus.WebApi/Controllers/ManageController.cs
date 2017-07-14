@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Tw.Bus.WebApi.Filters;
 using Tw.Bus.WebApi.Models;
 using log4net;
+using Tw.Bus.Cache;
 
 namespace Tw.Bus.WebApi.Controllers
 {
@@ -25,9 +26,16 @@ namespace Tw.Bus.WebApi.Controllers
 
         private readonly IUsyUserRepository _userRepository;
 
-        public ManageController(IUsyUserRepository userRepository)
+        private readonly IRedisCacheService _redisCache;
+
+        private readonly ICacheService _memoryCache;
+
+        public ManageController(IUsyUserRepository userRepository, IRedisCacheService redisCache, ICacheService memoryCache)
         {
             _userRepository = userRepository;
+
+            _redisCache = redisCache;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -48,6 +56,8 @@ namespace Tw.Bus.WebApi.Controllers
             {
                 log.Error("GetAllUser∑Ω∑®¥ÌŒÛ",ex);
             }
+
+           bool b=await _redisCache.SetAsync<string>("test","≤‚ ‘");
 
             var users = await _userRepository.GetAllListAsync();
             var dtos = AutoMapper.Mapper.Map<IEnumerable<UserDto>>(users);

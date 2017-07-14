@@ -25,6 +25,7 @@ using log4net.Repository;
 using Tw.Bus.Cache;
 using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tw.Bus.WebApi
 {
@@ -59,22 +60,22 @@ namespace Tw.Bus.WebApi
             //添加 可配置功能
             services.AddOptions();
 
-            var arrAllowSpecificOrigin = Configuration.GetSection("AllowSpecificOrigin")?.Value.Split(',');
-
             //添加跨域资源请求访问
+            // var arrAllowSpecificOrigin = Configuration.GetSection("AllowSpecificOrigin")?.Value.Split(',');
+
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
-                  builder => builder.WithOrigins(arrAllowSpecificOrigin)
-                                       .AllowAnyHeader()
-                                       .AllowAnyMethod()
-                                       .AllowCredentials());
+                //options.AddPolicy("AllowSpecificOrigin",
+                //  builder => builder.WithOrigins(arrAllowSpecificOrigin)
+                //                       .AllowAnyHeader()
+                //                       .AllowAnyMethod()
+                //                       .AllowCredentials());
 
-                //options.AddPolicy("AllowAllOrigins",
-                //      builder =>
-                //      {
-                //          builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-                //      });
+                options.AddPolicy("AllowAllOrigins",
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                      });
 
 
             });
@@ -83,8 +84,12 @@ namespace Tw.Bus.WebApi
             //依赖注入
             AddDependencies(services);
 
+            
+
             //添加数据上下文
             services.AddDbContext<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));
+
+           
 
             services.AddMemoryCache();
 
@@ -128,6 +133,7 @@ namespace Tw.Bus.WebApi
                 c.OperationFilter<HttpHeaderOperationFilter>(); // 添加httpHeader参数
             });
 
+
             // Get options from app settings
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
 
@@ -147,6 +153,42 @@ namespace Tw.Bus.WebApi
                 options.ValidFor = TimeSpan.FromMinutes(Convert.ToInt32(jwtAppSettingOptions[nameof(JwtIssuerOptions.ValidFor)]));
 
             });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
+
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+
+                ValidateAudience = true,
+                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+                 
+               
+
+            };
+
+            services.AddJwtBearerAuthentication(o =>
+            {
+                // You also need to update /wwwroot/app/scripts/app.js
+                //o.Authority = Configuration["JwtIssuerOptions:authority"];
+
+                o.TokenValidationParameters = tokenValidationParameters;
+            });
+
 
         }
 
@@ -175,33 +217,7 @@ namespace Tw.Bus.WebApi
                 c.ShowRequestHeaders();
             });
 
-
-            //jwt相关配置
-            //这个配置一定要加载UseMvc之前!!!
-            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
-
-
-            var secretKey = jwtAppSettingOptions[nameof(JwtIssuerOptions.SecretKey)];
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
-
-                ValidateAudience = true,
-                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-
-                ClockSkew = TimeSpan.Zero,
-
-            };
-            
+            app.UseAuthentication();
 
             app.UseMvc();
         }

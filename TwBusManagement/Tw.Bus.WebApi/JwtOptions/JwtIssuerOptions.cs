@@ -12,6 +12,7 @@ namespace Tw.Bus.WebApi.JwtOptions
     /// </summary>
     public class JwtIssuerOptions
     {
+        public string Path { get; set; } = "/api/token";
         /// <summary>
         /// iss - Issuer 代表这个jwt的签发主体
         /// </summary>

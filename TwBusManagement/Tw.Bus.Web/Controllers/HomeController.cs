@@ -54,8 +54,6 @@ namespace Tw.Bus.Web.Controllers
 
             myHttpClient.BaseAddress = new Uri("http://localhost:8002/");
 
-            
-
             HttpResponseMessage response = await myHttpClient.PostAsync("api/authtoken", content);
 
             string result = string.Empty;
