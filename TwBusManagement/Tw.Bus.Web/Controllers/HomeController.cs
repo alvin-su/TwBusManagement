@@ -10,6 +10,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Tw.Bus.Web.Controllers
 {
@@ -31,7 +32,7 @@ namespace Tw.Bus.Web.Controllers
 
             ApplicationUser user = new ApplicationUser
             {
-                UserName = "alvinsu",
+                UserName = "admin",
                 Password = "123456"
             };
 

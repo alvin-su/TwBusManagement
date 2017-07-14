@@ -83,9 +83,9 @@ namespace Tw.Bus.WebApi.Controllers
 
             #region 测试的时候使用
 
-            string strMd5Password = SecurityUtility.GetMd5Hash(applicationUser.Password).ToUpper();
+           // string strMd5Password = SecurityUtility.GetMd5Hash(applicationUser.Password).ToUpper();
 
-            applicationUser.Password = strMd5Password;
+          //  applicationUser.Password = strMd5Password;
 
             #endregion
             var identity = await LoginValidate(applicationUser);

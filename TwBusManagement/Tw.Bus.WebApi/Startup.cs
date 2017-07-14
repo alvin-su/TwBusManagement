@@ -19,14 +19,33 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Tw.Bus.WebApi.Filters;
+using log4net.Config;
+using log4net;
+using log4net.Repository;
 
 namespace Tw.Bus.WebApi
 {
     public class Startup
     {
+        public static ILoggerRepository log4netRepository { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            //初始化映射关系
+            TwBusDataMapper.InitializeDto();
+
+
+            log4netRepository = LogManager.CreateRepository("NETCoreRepository");
+
+            // string strLog4netFilePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log4net.config");
+
+            // XmlConfigurator.Configure(log4netRepository, new FileInfo("log4net.config"));
+
+            string strPath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log4net.config");
+
+            XmlConfigurator.Configure(log4netRepository, new FileInfo(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log4net.config")));
         }
 
         public IConfiguration Configuration { get; }
@@ -86,7 +105,25 @@ namespace Tw.Bus.WebApi
                 c.OperationFilter<HttpHeaderOperationFilter>(); // 添加httpHeader参数
             });
 
-           
+            // Get options from app settings
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
+            // Add JWT　Protection
+            var secretKey = jwtAppSettingOptions[nameof(JwtIssuerOptions.SecretKey)];
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+
+            // Configure JwtIssuerOptions
+            services.Configure<JwtIssuerOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+
+                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+                // options.ValidFor = TimeSpan.FromMinutes(20); //Token有效期
+
+                options.ValidFor = TimeSpan.FromMinutes(Convert.ToInt32(jwtAppSettingOptions[nameof(JwtIssuerOptions.ValidFor)]));
+
+            });
 
         }
 
@@ -116,7 +153,32 @@ namespace Tw.Bus.WebApi
             });
 
 
-           
+            //jwt相关配置
+            //这个配置一定要加载UseMvc之前!!!
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
+
+            var secretKey = jwtAppSettingOptions[nameof(JwtIssuerOptions.SecretKey)];
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+
+                ValidateAudience = true,
+                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero,
+
+            };
+            
 
             app.UseMvc();
         }

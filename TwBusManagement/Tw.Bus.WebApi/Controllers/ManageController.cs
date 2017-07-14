@@ -12,6 +12,7 @@ using Tw.Bus.Common;
 using Microsoft.AspNetCore.Authorization;
 using Tw.Bus.WebApi.Filters;
 using Tw.Bus.WebApi.Models;
+using log4net;
 
 namespace Tw.Bus.WebApi.Controllers
 {
@@ -19,6 +20,9 @@ namespace Tw.Bus.WebApi.Controllers
    
     public class ManageController : Controller
     {
+
+        private static readonly ILog log = LogManager.GetLogger(Startup.log4netRepository.Name, typeof(ManageController));
+
         private readonly IUsyUserRepository _userRepository;
 
         public ManageController(IUsyUserRepository userRepository)
@@ -33,9 +37,18 @@ namespace Tw.Bus.WebApi.Controllers
         /// <returns></returns>
         [Route("api/queryalluser")]
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<string> GetAllUser()
         {
+            try
+            {
+                throw new Exception("≤‚ ‘¥ÌŒÛ£°");
+            }
+            catch (Exception ex)
+            {
+                log.Error("GetAllUser∑Ω∑®¥ÌŒÛ",ex);
+            }
+
             var users = await _userRepository.GetAllListAsync();
             var dtos = AutoMapper.Mapper.Map<IEnumerable<UserDto>>(users);
             return Common.JsonHelper.SerializeObject(dtos);

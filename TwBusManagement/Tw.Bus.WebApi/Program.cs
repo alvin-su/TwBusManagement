@@ -17,8 +17,7 @@ namespace Tw.Bus.WebApi
         {
             BuildWebHost(args).Run();
 
-            //初始化映射关系
-            TwBusDataMapper.InitializeDto();
+          
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
