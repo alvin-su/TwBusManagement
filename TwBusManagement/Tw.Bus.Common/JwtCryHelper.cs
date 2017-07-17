@@ -8,7 +8,7 @@ using System.Text;
 namespace Tw.Bus.Common
 {
     /// <summary>
-    /// 使用JWT对接口传输数据进行加密
+    /// 使用Josn.Jwt对接口传输数据进行加密
     /// </summary>
     public class JwtCryHelper
     {
@@ -45,6 +45,10 @@ namespace Tw.Bus.Common
         {
 
             byte[] key = Encoding.ASCII.GetBytes(strSecretKey);
+
+
+            JwtSettings se = new JwtSettings();
+           
 
             return Jose.JWT.Decode(strSecretMsg, key, Jose.JwsAlgorithm.HS512);
         }

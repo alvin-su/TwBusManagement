@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Tw.Bus.Common;
@@ -33,13 +34,15 @@ namespace Tw.Bus.WebApi.Filters
                     return;
                 }
 
-                str = JwtCryHelper.DecodeByJWT(str).ToString();
+                //str = JwtCryHelper.DecodeByJWT(str).ToString();
 
-                str = str.Replace("\\", "");
+                //str = str.Replace("\\", "");
 
-                str = str.Remove(0, 1);
+                //str = str.Remove(0, 1);
 
-                str = str.Remove(str.Length - 1, 1);
+                //str = str.Remove(str.Length - 1, 1);
+
+                str = JwtCryptHelper.DecodeByJwt(str).ToString();
 
                 byte[] array = Encoding.ASCII.GetBytes(str);
 

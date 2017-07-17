@@ -10,7 +10,6 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Tw.Bus.Web.Controllers
 {
@@ -23,18 +22,16 @@ namespace Tw.Bus.Web.Controllers
 
         public async Task<IActionResult> About()
         {
-            ViewData["Message"] = "Your application description page.";
-
-           
-
+            
             //post 提交 先创建一个和webapi对应的类
            
-
             ApplicationUser user = new ApplicationUser
             {
                 UserName = "admin",
                 Password = "123456"
             };
+
+          
 
             //设置HttpClientHandler的AutomaticDecompression
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
@@ -43,24 +40,32 @@ namespace Tw.Bus.Web.Controllers
 
             string strJsonUser = JsonHelper.SerializeObject(user);
 
-            string strJwtCry = Common.JwtCryHelper.EncodeBYJWT(strJsonUser);
+            //string strJwtCry = Common.JwtCryHelper.EncodeBYJWT(strJsonUser);
 
-            HttpContent content = new StringContent(strJwtCry);
+            string strJwtCry = Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
+
+            HttpContent content = new StringContent(strJwtCry, Encoding.GetEncoding("UTF-8"), "application/json");
 
             //一定要设定Header
           
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
+          //  content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
             myHttpClient.BaseAddress = new Uri("http://localhost:8002/");
 
-            HttpResponseMessage response = await myHttpClient.PostAsync("api/authtoken", content);
+            HttpResponseMessage response = await myHttpClient.PostAsync("api/token", content);
 
             string result = string.Empty;
             if (response.IsSuccessStatusCode)
             {
                 result = response.Content.ReadAsStringAsync().Result;
+
+                ViewData["Message"] = result;
             }
+            else
+            {
+                ViewData["Message"] = "Your application description page.";
+            }
+
             return View();
         }
 
