@@ -31,8 +31,6 @@ namespace Tw.Bus.Web.Controllers
                 Password = "123456"
             };
 
-          
-
             //设置HttpClientHandler的AutomaticDecompression
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
 
@@ -40,7 +38,6 @@ namespace Tw.Bus.Web.Controllers
 
             string strJsonUser = JsonHelper.SerializeObject(user);
 
-            //string strJwtCry = Common.JwtCryHelper.EncodeBYJWT(strJsonUser);
 
             string strJwtCry = Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
 
@@ -65,7 +62,7 @@ namespace Tw.Bus.Web.Controllers
             {
                 ViewData["Message"] = "Your application description page.";
             }
-
+            
             return View();
         }
 
