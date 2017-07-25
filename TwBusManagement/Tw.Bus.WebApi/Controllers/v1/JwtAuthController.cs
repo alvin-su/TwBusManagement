@@ -20,7 +20,7 @@ using Tw.Bus.Common;
 using Tw.Bus.WebApi.Filters;
 using System.IO;
 
-namespace Tw.Bus.WebApi.Controllers
+namespace Tw.Bus.WebApi.Controllers.v1
 {
     [Produces("application/json")]
     public class JwtAuthController : Controller

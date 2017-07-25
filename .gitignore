@@ -260,3 +260,8 @@ paket-files/
 __pycache__/
 *.pyc
 /TwBusManagement/Tw.Bus.WebApi/logfile
+/TwBusManagement/Tw.Bus.WebApi/Views
+/TwBusManagement/Tw.Bus.WebApi/bower_components
+/TwBusManagement/Tw.Bus.WebApi/wwwroot
+/TwBusManagement/Tw.Bus.WebApi/bower.json
+/TwBusManagement/Tw.Bus.WebApi/bundleconfig.json

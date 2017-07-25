@@ -26,6 +26,8 @@ using Tw.Bus.Cache;
 using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Tw.Bus.WebApi
 {
@@ -84,17 +86,19 @@ namespace Tw.Bus.WebApi
             //依赖注入
             AddDependencies(services);
 
-            
+
 
             //添加数据上下文
             services.AddDbContext<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));
 
-           
+
 
             services.AddMemoryCache();
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(c =>
+               c.Conventions.Add(new ApiExplorerGroupPerVersionConvention())
+            );
 
 
             //添加Redis分布式缓存
@@ -118,7 +122,16 @@ namespace Tw.Bus.WebApi
             {
                 c.SwaggerDoc("v1", new Info
                 {
-                    Version = "v1",
+                    Version = "TwBus Api v1",
+                    Title = "TwBusManagement接口文档",
+                    Description = "RESTful API for TwBusManagement",
+                    TermsOfService = "None",
+                    Contact = new Contact { Name = "Alvin_Su", Email = "alvin_su@outlook.com", Url = "" }
+                });
+
+                c.SwaggerDoc("v2", new Info
+                {
+                    Version = "TwBus Api v2",
                     Title = "TwBusManagement接口文档",
                     Description = "RESTful API for TwBusManagement",
                     TermsOfService = "None",
@@ -131,6 +144,7 @@ namespace Tw.Bus.WebApi
                 c.IncludeXmlComments(xmlPath);
 
                 c.OperationFilter<HttpHeaderOperationFilter>(); // 添加httpHeader参数
+
             });
 
 
@@ -176,8 +190,8 @@ namespace Tw.Bus.WebApi
                 ValidateLifetime = true,
 
                 ClockSkew = TimeSpan.Zero
-                 
-               
+
+
 
             };
 
@@ -189,7 +203,12 @@ namespace Tw.Bus.WebApi
                 o.TokenValidationParameters = tokenValidationParameters;
             });
 
-
+            services.AddApiVersioning(option =>
+            {
+                option.ReportApiVersions = true;
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -205,7 +224,7 @@ namespace Tw.Bus.WebApi
             //app.UseCors("AllowAllOrigins");
 
 
-           // Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            // Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -214,6 +233,7 @@ namespace Tw.Bus.WebApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TwBusManagement API V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "TwBusManagement API V2");
                 c.ShowRequestHeaders();
             });
 
@@ -230,7 +250,7 @@ namespace Tw.Bus.WebApi
         {
 
             services.AddTransient<IUsyUserRepository, UsyUserRepository>();
-           
+
         }
     }
 }

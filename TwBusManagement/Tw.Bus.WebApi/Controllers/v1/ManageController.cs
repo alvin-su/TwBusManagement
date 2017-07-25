@@ -15,10 +15,11 @@ using Tw.Bus.WebApi.Models;
 using log4net;
 using Tw.Bus.Cache;
 
-namespace Tw.Bus.WebApi.Controllers
+namespace Tw.Bus.WebApi.Controllers.v1
 {
     //[Produces("application/json")]
-   
+    
+    [ApiVersion("1.0")]
     public class ManageController : Controller
     {
 
@@ -38,6 +39,12 @@ namespace Tw.Bus.WebApi.Controllers
             _memoryCache = memoryCache;
         }
 
+        [HttpGet, MapToApiVersion("1.0")]
+        public IActionResult Get()
+        {
+            return Json(new string[] { "value1", "value2" });
+        }
+
         /// <summary>
         /// 获取所有用户信息，加入Jwt认证（需先请求接口api/authtoken），需要在请求Headers 中加入 Authorization:Bearer 获取的Token值
         /// 还需在请求Headers的中加入 Content-Type:application/json
@@ -46,6 +53,7 @@ namespace Tw.Bus.WebApi.Controllers
         [Route("api/queryalluser")]
         [HttpPost]
         [Authorize]
+        [MapToApiVersion("1.0")]
         public async Task<string> GetAllUser()
         {
             try
