@@ -10,11 +10,19 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
+using Microsoft.Extensions.Options;
 
 namespace Tw.Bus.Web.Controllers
 {
     public class HomeController : Controller
     {
+        public string ApiServerAddr { get; private set; }
+
+        public HomeController(IOptions<ApiServer> option)
+        {
+            ApiServerAddr = option.Value.Addr;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -22,49 +30,28 @@ namespace Tw.Bus.Web.Controllers
 
         public async Task<IActionResult> About()
         {
-            
-            //post 提交 先创建一个和webapi对应的类
-           
+
+            #region 获取Access_token
             ApplicationUser user = new ApplicationUser
             {
                 UserName = "admin",
                 Password = "123456"
             };
-
-            //设置HttpClientHandler的AutomaticDecompression
-            var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
-
-            HttpClient myHttpClient = new HttpClient(handler);
-
             string strJsonUser = JsonHelper.SerializeObject(user);
-
 
             string strJwtCry = Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
 
-            HttpContent content = new StringContent(strJwtCry, Encoding.GetEncoding("UTF-8"), "application/json");
+            HttpContent content = new StringContent(strJwtCry);
 
-            //一定要设定Header
-          
-          //  content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            string strUrl = ApiServerAddr + @"/api/v1/jwt/token";
 
-            myHttpClient.BaseAddress = new Uri("http://localhost:8002/");
+            string result = await ApiHelp.ApiPostAsync(strUrl, content);
 
-            HttpResponseMessage response = await myHttpClient.PostAsync("api/token", content);
+            AccessTokenModel tokenModel = JsonHelper.Deserialize<AccessTokenModel>(result);
+            #endregion
 
-            string result = string.Empty;
-            if (response.IsSuccessStatusCode)
-            {
-                result = response.Content.ReadAsStringAsync().Result;
+            ViewData["Message"] = tokenModel.access_token;
 
-                ViewData["Message"] = result;
-            }
-            else
-            {
-                ViewData["Message"] = "Your application description page.";
-            }
-
-
-          
             return View();
         }
 

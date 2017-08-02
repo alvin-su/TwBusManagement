@@ -22,7 +22,10 @@ using System.IO;
 
 namespace Tw.Bus.WebApi.Controllers.v1
 {
-    [Produces("application/json")]
+    //[Produces("application/json")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/jwt")]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class JwtAuthController : Controller
     {
         private readonly JwtIssuerOptions _jwtOptions;
@@ -77,7 +80,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/token")]
+        [Route("token")]
         [TypeFilter(typeof(TwBusResourceFilter))]
         public async  Task<IActionResult> GetToken([FromBody]ApplicationUser applicationUser)
         {
@@ -115,7 +118,8 @@ namespace Tw.Bus.WebApi.Controllers.v1
                 access_token = encodedJwt,
                 expires_in = (int)_jwtOptions.ValidFor.TotalSeconds
             };
-            var resJson = JsonConvert.SerializeObject(response, _seriallizerSettings);
+            var resJson=  JsonHelper.SerializeObject(response);
+          //  var resJson = JsonConvert.SerializeObject(response, _seriallizerSettings);
             return new OkObjectResult(resJson);
         }
 

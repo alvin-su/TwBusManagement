@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Tw.Bus.Web.Models;
 
 namespace Tw.Bus.Web
 {
@@ -23,6 +24,10 @@ namespace Tw.Bus.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddOptions();
+
+            services.Configure<ApiServer>(Configuration.GetSection("ApiServer"));
+
             services.AddMvc();
         }
 

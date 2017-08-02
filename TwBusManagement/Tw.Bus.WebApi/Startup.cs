@@ -63,7 +63,7 @@ namespace Tw.Bus.WebApi
             services.AddOptions();
 
             //添加跨域资源请求访问
-            // var arrAllowSpecificOrigin = Configuration.GetSection("AllowSpecificOrigin")?.Value.Split(',');
+             var arrAllowSpecificOrigin = Configuration.GetSection("AllowSpecificOrigin")?.Value.Split(',');
 
             services.AddCors(options =>
             {
