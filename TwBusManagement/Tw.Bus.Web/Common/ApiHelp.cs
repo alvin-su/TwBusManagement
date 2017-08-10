@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using Tw.Bus.Common;
+using Tw.Bus.Web.Models;
 
-namespace Tw.Bus.Common
+namespace Tw.Bus.Web.Common
 {
     public class ApiHelp
     {
@@ -28,7 +30,7 @@ namespace Tw.Bus.Common
                 {
                     return "网络错误，请确认网络连接";
                 }
-              
+
             }
 
         }
@@ -65,6 +67,27 @@ namespace Tw.Bus.Common
             }
 
         }
+        /// <summary>
+        /// 获取AccessToken的方法
+        /// </summary>
+        /// <param name="user">当前登录用户</param>
+        /// <param name="strApiServerAddr">Api接口地址</param>
+        /// <returns></returns>
+        public static async Task<AccessTokenModel> GetAccessTokenAsync(ApplicationUser user,string strApiServerAddr)
+        {
+            string strJsonUser = JsonHelper.SerializeObject(user);
 
+            string strJwtCry = Tw.Bus.Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
+
+            HttpContent content = new StringContent(strJwtCry);
+
+            string strUrl = strApiServerAddr + @"/api/v1/jwt/token";
+
+            string result = await ApiPostAsync(strUrl, content);
+
+            AccessTokenModel tokenModel = JsonHelper.Deserialize<AccessTokenModel>(result);
+
+            return tokenModel;
+        }
     }
 }

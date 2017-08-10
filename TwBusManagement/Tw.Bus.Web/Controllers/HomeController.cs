@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using Microsoft.Extensions.Options;
+using Tw.Bus.Web.Common;
 
 namespace Tw.Bus.Web.Controllers
 {
@@ -31,24 +32,13 @@ namespace Tw.Bus.Web.Controllers
         public async Task<IActionResult> About()
         {
 
-            #region 获取Access_token
             ApplicationUser user = new ApplicationUser
             {
                 UserName = "admin",
                 Password = "123456"
             };
-            string strJsonUser = JsonHelper.SerializeObject(user);
-
-            string strJwtCry = Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
-
-            HttpContent content = new StringContent(strJwtCry);
-
-            string strUrl = ApiServerAddr + @"/api/v1/jwt/token";
-
-            string result = await ApiHelp.ApiPostAsync(strUrl, content);
-
-            AccessTokenModel tokenModel = JsonHelper.Deserialize<AccessTokenModel>(result);
-            #endregion
+           //获取访问token
+           AccessTokenModel tokenModel= await ApiHelp.GetAccessTokenAsync(user, ApiServerAddr);
 
             ViewData["Message"] = tokenModel.access_token;
 
