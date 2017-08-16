@@ -27,7 +27,6 @@ using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Tw.Bus.WebApi
 {
@@ -175,33 +174,33 @@ namespace Tw.Bus.WebApi
             });
 
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+            //var tokenValidationParameters = new TokenValidationParameters
+            //{
+            //    ValidateIssuer = true,
+            //    ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
 
-                ValidateAudience = true,
-                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
+            //    ValidateAudience = true,
+            //    ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
 
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
+            //    ValidateIssuerSigningKey = true,
+            //    IssuerSigningKey = signingKey,
 
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
+            //    RequireExpirationTime = true,
+            //    ValidateLifetime = true,
 
-                ClockSkew = TimeSpan.Zero
+            //    ClockSkew = TimeSpan.Zero
 
 
 
-            };
+            //};
 
-            services.AddJwtBearerAuthentication(o =>
-            {
-                // You also need to update /wwwroot/app/scripts/app.js
-                //o.Authority = Configuration["JwtIssuerOptions:authority"];
+            //services.AddJwtBearerAuthentication(o =>
+            //{
+            //    // You also need to update /wwwroot/app/scripts/app.js
+            //    //o.Authority = Configuration["JwtIssuerOptions:authority"];
 
-                o.TokenValidationParameters = tokenValidationParameters;
-            });
+            //    o.TokenValidationParameters = tokenValidationParameters;
+            //});
 
             services.AddApiVersioning(option =>
             {

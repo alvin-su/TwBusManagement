@@ -81,7 +81,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
         [HttpPost]
         [AllowAnonymous]
         [Route("token")]
-        [TypeFilter(typeof(TwBusResourceFilter))]
+        //[TypeFilter(typeof(TwBusResourceFilter))]
         public async  Task<IActionResult> GetToken([FromBody]ApplicationUser applicationUser)
         {
 
