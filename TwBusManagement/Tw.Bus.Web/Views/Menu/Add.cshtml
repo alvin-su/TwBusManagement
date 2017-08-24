@@ -1,0 +1,220 @@
+﻿
+@{
+    ViewData["Title"] = "添加菜单";
+}
+
+@model Tw.Bus.EntityDTO.MenuDto
+
+@section headCssSection{
+    @*头部引用的CSS*@
+
+    <link href="~/css/Validform.css" rel="stylesheet" />
+
+    <link href="~/plugins/iCheck/all.css" rel="stylesheet" />
+}
+@section scriptSection{
+    @*页面底部JS脚本*@
+
+    <script src="~/js/Validform_v5.3.2_min.js"></script>
+
+    <script src="~/plugins/iCheck/icheck.min.js"></script>
+
+
+    <script type="text/javascript">
+          $(function () {
+              $("#menuForm").Validform({
+                  tiptype: 4,
+                  ajaxPost: true,
+                  beforeSubmit: function (currentForm) {
+                      showLoading();
+                  },
+                  callback: function (data) {
+                      closeLoading();
+                     // debugger;
+                      if (data.statu == 'y') {
+                          showNotify(data.msg, "success", 2000);
+                         
+                          setTimeout(window.location.href = '@Url.Action("Index","Menu")', 2000);
+
+                      }
+                      else {
+                          showNotify(data.msg, "error", 2000);
+
+                      }
+                  },
+              });
+
+
+              $('#IsLockChk').iCheck({
+                  checkboxClass: 'icheckbox_square-blue',
+                  radioClass: 'iradio_square-blue',
+                  increaseArea: '20%' // optional
+              });
+
+              //监听checkbox的点击事件
+              //$("#IsLockChk").on("click", function () {
+              //    var value = $("#IsLock").val() == "0" ? "1" : "0";
+              //    $("#IsLock").val(value);
+
+              //})
+
+              $('#IsLockChk').on('ifChecked', function (event) { 
+                  //var value = $("#IsLock").val() == "0" ? "1" : "0";
+                  $("#IsLock").val("1");
+              }); 
+              $('#IsLockChk').on('ifUnchecked', function (event) {
+                 // var value = $("#IsLock").val() == "0" ? "1" : "0";
+                  $("#IsLock").val("0");
+              }); 
+          })
+    </script>
+
+}
+@section placeTitleSection{
+
+    <h1>
+        菜单管理
+        @*<small>Version 1.0</small>*@
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#"><i></i> 系统管理</a></li>
+        <li><a href="#"><i></i> 菜单管理</a></li>
+        <li class="active">菜单维护</li>
+    </ol>
+}
+
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">添加/编辑菜单</h3>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+            @*<button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove">
+                    <i class="fa fa-times"></i>
+                </button>*@
+        </div>
+    </div>
+
+    <form id="menuForm" class="form-horizontal" asp-controller="Menu" asp-action="Add" method="post">
+        <input type="hidden" asp-for="id" value="@Model.id" />
+        <div class="box-body">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">上级导航</label>
+
+                <div class="col-sm-10">
+
+                    @if (ViewBag.MenuList != null)
+                    {
+                        @Html.DropDownList("ParentId", ViewBag.MenuList as SelectList, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        <select name="ParentId" class="form-control">
+                            <option value="0">顶级菜单</option>
+                        </select>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">控制器名</label>
+
+                <div class="col-sm-10">
+
+                    <input type="text" class="form-control" asp-for="ControllerName" placeholder="控制器名" value="@Model.ControllerName" datatype="*2-20" nullmsg="请输入控制器名！" errormsg="至少2个字符,最多20个字符！">
+                    <i class="Validform_checktip"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作名</label>
+
+                <div class="col-sm-10">
+
+                    <input type="text" class="form-control" asp-for="ActionName" placeholder="操作名" value="@Model.ActionName" datatype="*2-20" nullmsg="请输入操作名！" errormsg="至少2个字符,最多20个字符！">
+                    <i class="Validform_checktip"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Name" class="col-sm-2 control-label">菜单标题</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="Name" placeholder="菜单标题" value="@Model.Name" datatype="*2-10" nullmsg="请输入菜单名称！" errormsg="至少2个字符,最多10个字符！">
+                    <i class="Validform_checktip"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="LinkPara" class="col-sm-2 control-label">页面参数</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="LinkPara" placeholder="菜单标题" value="@Model.LinkPara">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="IconCss" class="col-sm-2 control-label">图标类名</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="IconCss" placeholder="图标类名" value="@Model.IconCss">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Remark" class="col-sm-2 control-label">备注</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="Remark" placeholder="备注" value="@Model.Remark">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="SortID" class="col-sm-2 control-label">排序数字</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="SortID" placeholder="图标类名" value="@Model.SortID" datatype="n" nullmsg="必须填写排序数字" errormsg="排序数字是数字类型">
+                    <i class="Validform_checktip"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">是否隐藏</label>
+                <div class="col-sm-3">
+                    <input type="hidden" value="@Model.IsLock" asp-for="IsLock" />
+                    @if (Model.IsLock == 0)
+                    {
+                        <div class="checkbox icheck">
+                            <label>
+                                <input id="IsLockChk" type="checkbox" /> 
+                            </label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="checkbox icheck">
+                            <label>
+                                <input id="IsLockChk" type="checkbox" checked="checked" />
+                            </label>
+                        </div>
+
+                    }
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-info">提交</button>
+                </div>
+
+            </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+
+        </div>
+
+        <!-- /.box-footer -->
+    </form>
+
+</div>

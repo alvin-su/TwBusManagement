@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using log4net;
+using log4net.Config;
+using log4net.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Tw.Bus.IRepository;
-using Tw.Bus.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
-using System.IO;
-using Tw.Bus.WebApi.JwtOptions;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Tw.Bus.WebApi.Filters;
-using log4net.Config;
-using log4net;
-using log4net.Repository;
 using Tw.Bus.Cache;
-using Microsoft.Extensions.Caching.Redis;
-using Microsoft.Extensions.Caching.Memory;
+using Tw.Bus.EntityFrameworkCore;
+using Tw.Bus.IRepository;
+using Tw.Bus.WebApi.Filters;
+using Tw.Bus.WebApi.JwtOptions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Tw.Bus.WebApi
 {
@@ -86,11 +83,11 @@ namespace Tw.Bus.WebApi
             AddDependencies(services);
 
 
-
             //添加数据上下文
-            services.AddDbContext<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));
+            // services.AddDbContext<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));
 
-
+            //添加数据上下文到连接池
+            services.AddDbContextPool<TwBusDbContext>(options => options.UseMySql(Configuration.GetConnectionString("TwBusDbContext")));
 
             services.AddMemoryCache();
 
@@ -103,7 +100,6 @@ namespace Tw.Bus.WebApi
             //添加Redis分布式缓存
             services.AddSingleton(typeof(IRedisCacheService), new RedisCacheService(new RedisCacheOptions
             {
-
                 Configuration = Configuration.GetConnectionString("RedisConnection"),
                 InstanceName = "TwBus"
 
@@ -167,40 +163,36 @@ namespace Tw.Bus.WebApi
 
             });
 
+
+            //JWT
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+
+                ValidateAudience = true,
+                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero,
+
+            };
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o=> 
+            {
+                //  o.Audience= jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+                o.TokenValidationParameters = tokenValidationParameters;
             });
-
-
-            //var tokenValidationParameters = new TokenValidationParameters
-            //{
-            //    ValidateIssuer = true,
-            //    ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
-
-            //    ValidateAudience = true,
-            //    ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
-
-            //    ValidateIssuerSigningKey = true,
-            //    IssuerSigningKey = signingKey,
-
-            //    RequireExpirationTime = true,
-            //    ValidateLifetime = true,
-
-            //    ClockSkew = TimeSpan.Zero
-
-
-
-            //};
-
-            //services.AddJwtBearerAuthentication(o =>
-            //{
-            //    // You also need to update /wwwroot/app/scripts/app.js
-            //    //o.Authority = Configuration["JwtIssuerOptions:authority"];
-
-            //    o.TokenValidationParameters = tokenValidationParameters;
-            //});
 
             services.AddApiVersioning(option =>
             {
@@ -219,8 +211,8 @@ namespace Tw.Bus.WebApi
 
             // 注释下面这句表示不启用全局CORS中间件，在控制器中单独实现，
             //可在控制器中添加 [EnableCors("AllowSpecificOrigin")] 特性
-            app.UseCors("AllowSpecificOrigin");
-            //app.UseCors("AllowAllOrigins");
+            //app.UseCors("AllowSpecificOrigin");
+            app.UseCors("AllowAllOrigins");
 
 
             // Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -249,6 +241,8 @@ namespace Tw.Bus.WebApi
         {
 
             services.AddTransient<IUsyUserRepository, UsyUserRepository>();
+
+            services.AddTransient<IUsyMenuRepository, UsyMenuRepository>();
 
         }
     }

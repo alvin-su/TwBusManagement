@@ -22,6 +22,10 @@ namespace Tw.Bus.WebApi
                 //ForMember(des => des.UserId, options => options.MapFrom(src => src.Id))
                 //.ForMember(des => des.UserName, options => options.MapFrom(src => src.Name));
                 cfg.CreateMap<Usy_User, UserDto>();
+                cfg.CreateMap<UserDto, Usy_User>();
+
+                cfg.CreateMap<Usy_Menu, MenuDto>();
+                cfg.CreateMap<MenuDto, Usy_Menu>();
 
             });
 

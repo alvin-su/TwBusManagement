@@ -1,0 +1,159 @@
+﻿@{
+    ViewData["Title"] = "菜单管理";
+}
+@model List<Tw.Bus.EntityDTO.MenuDto>
+
+@section headCssSection{
+    @*头部引用的CSS*@
+
+    
+<link href="~/js/jstree/dist/themes/default/style.min.css" rel="stylesheet" />
+<link href="~/js/jquery-treetable/stylesheets/jquery.treetable.css" rel="stylesheet" />
+<link href="~/js/jquery-treetable/stylesheets/jquery.treetable.theme.custom.css" rel="stylesheet" />
+
+}
+
+@section scriptSection{
+    @*页面底部JS脚本*@
+
+    <script src="~/js/jstree/dist/jstree.min.js"></script>
+    <script src="~/js/jquery-treetable/javascripts/src/jquery.treetable.js"></script>
+    <script src="~/js/ui-treeview.js"></script>
+
+    <script type="text/javascript">
+         function Delete(id) {
+            bootbox.confirm("确定要删除该菜单及其所有子菜单吗？", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: 'post',
+                        data: { menuid: id },
+                        url: '@Url.Action("MenuDelete", "Menu")',
+                        success: function (data) {
+                            if (data.statu == 'y') {
+                                showNotify(data.msg, "success", 1000);
+                                setTimeout(window.location.reload(), 1000);
+                            }
+                            else {
+                                showNotify(data.msg, "error", 2000);
+                            }
+                        },
+                        error: function (error) {
+
+                        }
+                    })
+                }
+
+            });
+        }
+    </script>
+}
+
+@section placeTitleSection{
+
+    <h1>
+        菜单管理
+        @*<small>Version 1.0</small>*@
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#"><i></i> 系统管理</a></li>
+        <li class="active">菜单管理</li>
+    </ol>
+}
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">菜单树形结构</h3>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+            @*<button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove">
+                <i class="fa fa-times"></i>
+            </button>*@
+        </div>
+    </div>
+    <div class="box-body" style="display: block;">
+
+        <div style="float:right">
+            <a href='@Url.Action("MenuAdd","Menu")' class="btn btn-success btn-default"><i class="fa fa-plus"></i> 添加菜单</a>
+            <a href="@Url.Action("MenuAuthority","Menu")" class="btn btn-success btn-default"><i class="fa fa-plus"></i>菜单权限分配</a>
+        </div>
+
+        <table id="example-advanced">
+            <caption class="mbl mtl">
+                <a href="#" onclick="jQuery('#example-advanced').treetable('expandAll'); return false;">展开全部</a>&nbsp; | &nbsp;<a href="#" onclick="jQuery('#example-advanced').treetable('collapseAll'); return false;">收起全部</a>
+            </caption>
+            <thead>
+                <tr>
+                    <th class="center">
+
+                        导航标题
+                    </th>
+                    <th>控制器名</th>
+                    <th>操作名</th>
+
+                    <th>显示</th>
+
+                    <th>排序</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count != 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        string parentid = "";
+                        if (item.Class_layer == 1)
+                        {
+                            parentid = "";
+                        }
+                        else
+                        {
+                            parentid = item.ParentId.ToString();
+                        }
+                        <tr data-tt-id="@item.id" data-tt-parent-id="@parentid">
+                            <td>
+                                <input type="hidden" name="menuid" value="@item.id" />
+                                <input type="hidden" name="classlayer" value="@item.Class_layer" />
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.ControllerName
+                            </td>
+                            <td>
+                                @item.ActionName
+                            </td>
+                            <td>
+                                @(item.IsLock == 0 ? "是" : "否")
+                            </td>
+                            <td>
+                                @item.SortID
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Add","Menu",new { ParentId = item.id} )" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> 添加子级</a>&nbsp;&nbsp;
+                                <a href="@Url.Action("Add","Menu",new { ParentId = item.ParentId, MenuId=item.id} )" class="btn btn-info btn-xs edit"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;
+                                <a href="javascript:void(0)" onclick="Delete(@item.id)" class="btn btn-danger btn-xs delete"><i class="fa fa-trash-o"></i> 删除</a>
+
+                             
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer" style="display: block;">
+        Footer
+    </div>
+    <!-- /.box-footer-->
+</div>
+
+

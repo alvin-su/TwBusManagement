@@ -42,10 +42,10 @@ namespace Tw.Bus.Web.Common
                 //设定Header
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-                HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("POST"), url);
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
 
-
-                request.Headers.Add("Authorization", "Bearer " + strToken);
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", strToken);
+               // request.Headers.Add("Authorization", "Bearer " + strToken);
 
                 request.Content = content;
 
@@ -70,11 +70,22 @@ namespace Tw.Bus.Web.Common
         /// <summary>
         /// 获取AccessToken的方法
         /// </summary>
-        /// <param name="user">当前登录用户</param>
-        /// <param name="strApiServerAddr">Api接口地址</param>
+        /// <param name="userNameOrJobNumber">登录用户的用户名或工号</param>
+        /// <param name="pwd">密码</param>
+        /// <param name="strApiServerAddr">服务端api接口地址</param>
         /// <returns></returns>
-        public static async Task<AccessTokenModel> GetAccessTokenAsync(ApplicationUser user,string strApiServerAddr)
+        public static async Task<AccessTokenModel> GetAccessTokenAsync(string userNameOrJobNumber,string pwd,string strApiServerAddr)
         {
+
+            ApplicationUser user = new ApplicationUser
+            {
+                UserName = userNameOrJobNumber,
+                Password = pwd,
+                JobNumber= userNameOrJobNumber
+            };
+
+            
+
             string strJsonUser = JsonHelper.SerializeObject(user);
 
             string strJwtCry = Tw.Bus.Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
@@ -89,5 +100,8 @@ namespace Tw.Bus.Web.Common
 
             return tokenModel;
         }
+
+
+
     }
 }

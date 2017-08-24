@@ -32,12 +32,16 @@ namespace Tw.Bus.WebApi.Controllers.v1
 
         private readonly ICacheService _memoryCache;
 
-        public ManageController(IUsyUserRepository userRepository, IRedisCacheService redisCache, ICacheService memoryCache)
+        private readonly IUsyMenuRepository _menuRepository;
+
+        public ManageController(IUsyUserRepository userRepository, IRedisCacheService redisCache, ICacheService memoryCache, IUsyMenuRepository menuRepository)
         {
             _userRepository = userRepository;
 
             _redisCache = redisCache;
             _memoryCache = memoryCache;
+
+            _menuRepository = menuRepository;
         }
 
        
@@ -67,7 +71,85 @@ namespace Tw.Bus.WebApi.Controllers.v1
             var dtos = AutoMapper.Mapper.Map<IEnumerable<UserDto>>(users);
             return Common.JsonHelper.SerializeObject(dtos);
         }
+        [Route("querymenu")]
+        [HttpPost, MapToApiVersion("1.0")]
+        [Authorize]
+        public async Task<string> GetMenuGetListHaveSort([FromBody]SearchMenuParamsDto dto)
+        {
+            try
+            {
+                var list = await _menuRepository.GetListHaveSortAsync(dto.parentId, dto.IsShowHide, dto.lstRoleId);
 
+                var dtos= AutoMapper.Mapper.Map<List<MenuDto>>(list);
+
+                return Common.JsonHelper.SerializeObject(dtos);
+            }
+            catch (Exception ex)
+            {
+                log.Error("GetMenuGetListHaveSort方法错误", ex);
+                throw;
+            }
+        }
+        [Route("MenuFindById")]
+        [HttpPost, MapToApiVersion("1.0")]
+        [Authorize]
+        public async Task<string> GetMenuById([FromBody]int menuid)
+        {
+            try
+            {
+                Usy_Menu menu=await _menuRepository.GetAsync(menuid);
+
+                var dto = AutoMapper.Mapper.Map<MenuDto>(menu);
+
+                return Common.JsonHelper.SerializeObject(dto);
+            }
+            catch (Exception ex)
+            {
+                log.Error("GetMenuById方法错误", ex);
+                throw;
+            }
+        }
+        [Route("MenuAdd")]
+        [HttpPost, MapToApiVersion("1.0")]
+        [Authorize]
+        public async Task<string> MenuAdd([FromBody]MenuDto dto)
+        {
+            try
+            {
+                Usy_Menu model = AutoMapper.Mapper.Map<Usy_Menu>(dto);
+
+                model = await _menuRepository.InsertAsync(model);
+
+                return Common.JsonHelper.SerializeObject(model.Id);
+
+                //return _menuRepository.InsertAsync(model).Id;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        [Route("MenuUpdate")]
+        [HttpPost, MapToApiVersion("1.0")]
+        [Authorize]
+        public async Task<string> MenuUpdate([FromBody]MenuDto dto)
+        {
+            try
+            {
+                Usy_Menu model = AutoMapper.Mapper.Map<Usy_Menu>(dto);
+
+                model = await _menuRepository.UpdateAsync(model);
+
+                return Common.JsonHelper.SerializeObject(model.Id);
+
+               
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
     }

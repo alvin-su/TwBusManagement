@@ -12,6 +12,7 @@ using System.Text;
 using System.Net;
 using Microsoft.Extensions.Options;
 using Tw.Bus.Web.Common;
+using System.Security.Principal;
 
 namespace Tw.Bus.Web.Controllers
 {
@@ -26,6 +27,18 @@ namespace Tw.Bus.Web.Controllers
 
         public IActionResult Index()
         {
+         
+            UserViewModel user = new UserViewModel();
+            user.id = 1;
+            user.UserName = "admin";
+            user.Pwd = "123456";
+            user.JobNumber = "1001";
+            user.lstRoleID.Add(1);
+
+            HttpContext.Session.Set<UserViewModel>("UserInfo", user);
+
+            
+
             return View();
         }
 
@@ -38,7 +51,17 @@ namespace Tw.Bus.Web.Controllers
                 Password = "123456"
             };
            //获取访问token
-           AccessTokenModel tokenModel= await ApiHelp.GetAccessTokenAsync(user, ApiServerAddr);
+           AccessTokenModel tokenModel= await ApiHelp.GetAccessTokenAsync("admin","123456", ApiServerAddr);
+
+
+            string strApiUrl = ApiServerAddr + @"/api/v1/manage/queryalluser";
+        
+          
+            string strJson = "";
+
+            HttpContent content = new StringContent(strJson);
+
+            string strRes = await ApiHelp.ApiPostWithTokenAsync(strApiUrl, content,tokenModel.access_token);
 
             ViewData["Message"] = tokenModel.access_token;
 

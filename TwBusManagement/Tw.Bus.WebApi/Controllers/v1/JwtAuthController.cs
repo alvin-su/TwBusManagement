@@ -81,7 +81,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
         [HttpPost]
         [AllowAnonymous]
         [Route("token")]
-        //[TypeFilter(typeof(TwBusResourceFilter))]
+        [TypeFilter(typeof(TwBusResourceFilter))]
         public async  Task<IActionResult> GetToken([FromBody]ApplicationUser applicationUser)
         {
 
@@ -139,9 +139,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
         /// <remarks>此方法为验证方法, 在正式项目中作为授权和配置权限使用, 注意与start up中的权限对应</remarks>
         private async Task<ClaimsIdentity> LoginValidate(ApplicationUser user)
         {
-            Expression<Func<Usy_User, bool>> predicate = t => t.UserName == user.UserName.Trim() && t.Pwd == user.Password.Trim();
-
-            Usy_User entityUser = await _userRepository.FirstOrDefaultAsync(predicate);
+            Usy_User entityUser = await _userRepository.FirstOrDefaultAsync(t => (t.UserName.Trim() == user.UserName.Trim()||t.JobNumber.Trim()==user.JobNumber.Trim()) && t.Pwd == user.Password.Trim());
 
             if (entityUser != null)
             {
