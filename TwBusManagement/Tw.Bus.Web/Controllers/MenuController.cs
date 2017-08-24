@@ -26,7 +26,7 @@ namespace Tw.Bus.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            bool b = await _redisCache.SetAsync<string>("TwBusWeb", "测试2222");
+           // bool b = await _redisCache.SetAsync<string>("TwBusWeb", "测试2222");
 
             string strApiUrl = ApiServerAddr + @"/api/v1/manage/querymenu";
 

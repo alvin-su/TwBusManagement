@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Tw.Bus.Web.Common;
 using Microsoft.Extensions.Options;
 using Tw.Bus.Cache;
+using Tw.Bus.Web.Filters;
 
 namespace Tw.Bus.Web.Controllers
 {
+    [TwBusAuthorize]
     public class BaseController : Controller
     {
         public string ApiServerAddr { get; private set; }

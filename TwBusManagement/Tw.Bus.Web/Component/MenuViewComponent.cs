@@ -26,17 +26,9 @@ namespace Tw.Bus.Web.Component
       
         public async Task<IViewComponentResult> InvokeAsync()
         {
-
-            //var list =  await Task<List<MenuDto>>.Run(()=> {
-            //    return _menuService.MenuGetListHaveSort(0, false, rolelist).Where(c => c.IsLock == 0).ToList();
-            //});
             var user = HttpContext.Session.Get<UserViewModel>("UserInfo");
-           // List<int> rolelist = user.lstRoleID;
             var list = await GetMenuAsync(user);
-            //HttpContext.Session.Set<string>("MenuCustomId", DateTime.Now.ToString("yyyyMMddHHmmss"));
             return View("_LeftMenu", list);
-
-
         }
 
         private async Task<List<MenuDto>> GetMenuAsync(UserViewModel user)

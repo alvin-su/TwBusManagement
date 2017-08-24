@@ -13,31 +13,32 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using Tw.Bus.Web.Common;
 using System.Security.Principal;
+using Tw.Bus.Cache;
 
 namespace Tw.Bus.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        public string ApiServerAddr { get; private set; }
-
-        public HomeController(IOptions<ApiServer> option)
+     
+        public HomeController(IOptions<ApiServer> option, IRedisCacheService redisCache, ICacheService memoryCache) :
+            base(option, redisCache, memoryCache)
         {
-            ApiServerAddr = option.Value.Addr;
+          
         }
 
         public IActionResult Index()
         {
-         
-            UserViewModel user = new UserViewModel();
-            user.id = 1;
-            user.UserName = "admin";
-            user.Pwd = "123456";
-            user.JobNumber = "1001";
-            user.lstRoleID.Add(1);
 
-            HttpContext.Session.Set<UserViewModel>("UserInfo", user);
+            //UserViewModel user = new UserViewModel();
+            //user.id = 1;
+            //user.UserName = "admin";
+            //user.Pwd = "E10ADC3949BA59ABBE56E057F20F883E";
+            //user.JobNumber = "1001";
+            //user.lstRoleID.Add(1);
 
-            
+            //HttpContext.Session.Set<UserViewModel>("UserInfo", user);
+
+
 
             return View();
         }

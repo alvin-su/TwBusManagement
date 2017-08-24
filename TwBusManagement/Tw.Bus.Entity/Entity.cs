@@ -13,7 +13,7 @@ namespace Tw.Bus.Entity
         /// 主键
         /// </summary>
         [Key]
-        public virtual TPrimaryKey Id { get; set; }
+        public virtual TPrimaryKey id { get; set; }
     }
 
     /// <summary>

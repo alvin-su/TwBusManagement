@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Tw.Bus.EntityDTO
 {
-    public class MenuDto
+    public class MenuDto:BaseDto
     {
-        public int id { get; set; }
+      //  public int id { get; set; }
         /// <summary>
         /// 菜单名
         /// </summary>		

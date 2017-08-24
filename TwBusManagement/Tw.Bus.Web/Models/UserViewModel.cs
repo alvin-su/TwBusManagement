@@ -53,5 +53,7 @@ namespace Tw.Bus.Web.Models
         /// </summary>	
         [ProtoMember(9)]
         public List<int> lstRoleID { get; set; } = new List<int>();
+
+        public string StatuName { get; set; }
     }
 }

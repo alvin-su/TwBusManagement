@@ -25,7 +25,7 @@ namespace Tw.Bus.EntityFrameworkCore
                 totallist = await _dbContext.UsyMenus.ToListAsync();
                 List<Usy_Menu> returnMenu = new List<Usy_Menu>();
                 Usy_Menu model = new Usy_Menu();
-                model = totallist.Where(c => c.Id == parentId).SingleOrDefault();
+                model = totallist.Where(c => c.id == parentId).SingleOrDefault();
                 if (model != null)
                 {
                     returnMenu.Add(model);
@@ -46,7 +46,7 @@ namespace Tw.Bus.EntityFrameworkCore
                         mlist = await _dbContext.UsyRoleMenus.Where(c => roleid.Contains(c.RoleId.Value)).Select(c => c.MenuId.Value).ToListAsync();
                     }
 
-                    allMenu = totallist.Where(c => c.IsLock == 0 && mlist.Contains(c.Id)).OrderBy(c => c.SortID).ToList();
+                    allMenu = totallist.Where(c => c.IsLock == 0 && mlist.Contains(c.id)).OrderBy(c => c.SortID).ToList();
                 }
                 if (allMenu == null)
                 {
@@ -134,7 +134,7 @@ namespace Tw.Bus.EntityFrameworkCore
                         }
                         foreach (var item in childlist)
                         {
-                            var temp = Get(item.Id);
+                            var temp = Get(item.id);
                             _dbContext.UsyMenus.Remove(temp);
                         }
                         await _dbContext.SaveChangesAsync();
@@ -173,7 +173,7 @@ namespace Tw.Bus.EntityFrameworkCore
             foreach (var item in templist)
             {
                 returnmenu.Add(item);
-                GetChildMenu(item.Id, returnmenu);
+                GetChildMenu(item.id, returnmenu);
             }
         }
         #endregion

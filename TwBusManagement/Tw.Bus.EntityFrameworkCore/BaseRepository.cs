@@ -93,7 +93,7 @@ namespace Tw.Bus.EntityFrameworkCore
         /// <param name="autoSave">是否立即执行保存</param>
         public TEntity Update(TEntity entity, bool autoSave = true)
         {
-            var obj = Get(entity.Id);
+            var obj = Get(entity.id);
             EntityToEntity(entity, obj);
             if (autoSave)
                 Save();
@@ -107,7 +107,7 @@ namespace Tw.Bus.EntityFrameworkCore
         /// <param name="autoSave">是否立即执行保存</param>
         public TEntity InsertOrUpdate(TEntity entity, bool autoSave = true)
         {
-            if (Get(entity.Id) != null)
+            if (Get(entity.id) != null)
                 return Update(entity, autoSave);
             return Insert(entity, autoSave);
         }
@@ -167,7 +167,7 @@ namespace Tw.Bus.EntityFrameworkCore
             if (order != null)
                 result = result.OrderBy(order);
             else
-                result = result.OrderBy(m => m.Id);
+                result = result.OrderBy(m => m.id);
             rowCount = result.Count();
             return result.Skip((startPage - 1) * pageSize).Take(pageSize);
         }
@@ -226,7 +226,7 @@ namespace Tw.Bus.EntityFrameworkCore
 
         public async Task<TEntity> UpdateAsync(TEntity entity, bool autoSave = true)
         {
-            var obj = Get(entity.Id);
+            var obj = Get(entity.id);
             EntityToEntity(entity, obj);
             if (autoSave)
             {
@@ -237,7 +237,7 @@ namespace Tw.Bus.EntityFrameworkCore
 
         public async Task<TEntity> InsertOrUpdateAsync(TEntity entity, bool autoSave = true)
         {
-            if (Get(entity.Id) != null)
+            if (Get(entity.id) != null)
                 return await UpdateAsync(entity, autoSave);
             return await InsertAsync(entity, autoSave);
         }
@@ -291,15 +291,15 @@ namespace Tw.Bus.EntityFrameworkCore
             {
                 if ((int)orderWay == 0) //升序
                 {
-                    result = result.OrderBy(m => m.Id);
+                    result = result.OrderBy(m => m.id);
                 }
                 else if ((int)orderWay == 1) //将序
                 {
-                    result = result.OrderByDescending(m => m.Id);
+                    result = result.OrderByDescending(m => m.id);
                 }
                 else
                 {
-                    result = result.OrderBy(m => m.Id);
+                    result = result.OrderBy(m => m.id);
                 }
             }
             return await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();

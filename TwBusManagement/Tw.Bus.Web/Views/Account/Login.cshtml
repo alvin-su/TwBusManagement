@@ -1,0 +1,165 @@
+﻿@{
+    Layout = null;
+}
+@model Tw.Bus.Web.Models.ApplicationUser
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录-Talkweb班车管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="~/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/plugins/iCheck/square/blue.css">
+
+    <link href="~/css/Validform.css" rel="stylesheet" />
+
+    <link href="~/css/beyond.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition login-page" onkeydown="myKeyDown()">
+
+    <!-- Loading Container -->
+    <div class="loading-container loading-inactive">
+        <div class="loading-progress">
+            <div class="rotator">
+                <div class="rotator">
+                    <div class="rotator colored">
+                        <div class="rotator">
+                            <div class="rotator colored">
+                                <div class="rotator colored"></div>
+                                <div class="rotator"></div>
+                            </div>
+                            <div class="rotator colored">
+
+                            </div>
+                        </div>
+                        <div class="rotator"></div>
+                    </div>
+                    <div class="rotator"></div>
+                </div>
+                <div class="rotator"></div>
+            </div>
+            <div class="rotator"></div>
+        </div>
+    </div>
+    <!--  /Loading Container -->
+
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#"><b>Talkweb</b>班车管理系统</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+            <form id="loginForm" asp-controller="Account" asp-action="Login" method="post">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" asp-for="JobNumber" placeholder="工号" datatype="*2-6" nullmsg="请输入工号！" errormsg="至少2个字符,最多6个字符！" />
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    <i class="Validform_checktip"></i>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" asp-for="Password" placeholder="Password" datatype="*6-20" nullmsg="请输入密码！" errormsg="至少6个字符,最多20个字符！" />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <i class="Validform_checktip"></i>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox"> Remember Me
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-xs-4">
+                        <button id="login" type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            <!-- /.social-auth-links -->
+            @*<a href="#">I forgot my password</a><br>
+                <a href="register.html" class="text-center">Register a new membership</a>*@
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery 3 -->
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/plugins/iCheck/icheck.min.js"></script>
+
+    <script src="~/js/Validform_v5.3.2_min.js"></script>
+
+    <script src="~/js/toastr/toastr.js"></script>
+    <script src="~/js/common.js?ver=1.0"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+
+            $("#loginForm").Validform({
+                  tiptype: 4,
+                  ajaxPost: true,
+                  beforeSubmit: function (currentForm) {
+
+
+                      showLoading();
+                  },
+                  callback: function (data) {
+                      closeLoading();
+                     // debugger;
+                      if (data.statu == 'y') {
+                          showNotify(data.msg, "success", 2000);
+
+                          setTimeout(window.location.href = '@Url.Action("Index","Home")', 2000);
+
+                      }
+                      else {
+                          showNotify(data.msg, "error", 2000);
+
+                      }
+                  },
+              });
+
+
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            });
+        });
+
+        function myKeyDown() {
+            var $btnLogin = $("#login");
+            if (event.keyCode == 13) {
+                $btnLogin.click();
+            }
+        };
+
+        //删除左右两端的空格
+        function trim(str) {
+            //return str.replace(/(^\s*)|(\s*$)/g, "");
+            return String(str).replace(/(^\s*)|(\s*$)/g, "");
+        };
+    </script>
+</body>
+</html>

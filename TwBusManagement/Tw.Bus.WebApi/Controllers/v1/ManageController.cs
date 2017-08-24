@@ -120,7 +120,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
 
                 model = await _menuRepository.InsertAsync(model);
 
-                return Common.JsonHelper.SerializeObject(model.Id);
+                return Common.JsonHelper.SerializeObject(model.id);
 
                 //return _menuRepository.InsertAsync(model).Id;
             }
@@ -141,7 +141,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
 
                 model = await _menuRepository.UpdateAsync(model);
 
-                return Common.JsonHelper.SerializeObject(model.Id);
+                return Common.JsonHelper.SerializeObject(model.id);
 
                
             }

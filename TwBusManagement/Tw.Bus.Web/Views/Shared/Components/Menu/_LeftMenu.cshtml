@@ -13,7 +13,6 @@
             if (i == Model.Count - 1)//最后一个菜单节结点
             {
 
-
                 <li>
                     <a href="@Url.Action(item.ActionName,item.ControllerName)@item.LinkPara" menuid="@item.id">
                         <i class="@item.IconCss"></i>
@@ -24,7 +23,7 @@
                 while (stack.Count > 0)
                 {
                     stack.Pop();
-                    @Html.Raw(" </ul>")
+                    @Html.Raw("</ul>")
                 }
             }
             else
@@ -33,16 +32,7 @@
                 if (item.id == nextitem.ParentId)//该结点有子结点
                 {
                     stack.Push(item.id);//将父ID保存
-                    @*<li>
-                        <a href="javascript:void(0)" class="menu-dropdown" menuid="@item.id">
-                            <i class="menu-icon @item.IconCss"></i>
-                            <span class="menu-text"> @item.Name </span>
-                            <i class="menu-expand"></i>
-                        </a>
-                        @Html.Raw("<ul class='submenu'>")
-                    </li>*@
-
-
+                   
                     <li class="treeview">
                         <a href="javascript:void(0)"  menuid="@item.id">
                             <i class="@item.IconCss"></i>
@@ -66,13 +56,6 @@
                           <span>@item.Name</span>
                           </a>
                     </li>
-
-                    @*<li>
-                        <a href="@Url.Action(item.ActionName,item.ControllerName)@item.LinkPara" menuid="@item.Id">
-                            <i class="menu-icon @item.IconCss"></i>
-                            <span class="menu-text"> @item.Name </span>
-                        </a>
-                    </li>*@
 
                     while (stack.Count > 0 && stack.Peek() != nextitem.ParentId)//下一个节点不是当前父结点的子结点
                     {
