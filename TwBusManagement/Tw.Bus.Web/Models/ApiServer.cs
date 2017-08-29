@@ -8,5 +8,9 @@ namespace Tw.Bus.Web.Models
     public class ApiServer
     {
         public string Addr { get; set; }
+
+        public string AppId { get; set; }
+
+        public string AppKey { get; set; }
     }
 }

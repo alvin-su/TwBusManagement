@@ -239,6 +239,7 @@ namespace Tw.Bus.WebApi
         /// <param name="services"></param>
         private void AddDependencies(IServiceCollection services)
         {
+            services.AddTransient<IUsyAppRepository, UsyAppRepository>();
 
             services.AddTransient<IUsyUserRepository, UsyUserRepository>();
 

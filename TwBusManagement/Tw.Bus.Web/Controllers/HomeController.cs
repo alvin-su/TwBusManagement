@@ -14,6 +14,8 @@ using Microsoft.Extensions.Options;
 using Tw.Bus.Web.Common;
 using System.Security.Principal;
 using Tw.Bus.Cache;
+using Tw.Bus.Web.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tw.Bus.Web.Controllers
 {
@@ -28,54 +30,17 @@ namespace Tw.Bus.Web.Controllers
 
         public IActionResult Index()
         {
-
-            //UserViewModel user = new UserViewModel();
-            //user.id = 1;
-            //user.UserName = "admin";
-            //user.Pwd = "E10ADC3949BA59ABBE56E057F20F883E";
-            //user.JobNumber = "1001";
-            //user.lstRoleID.Add(1);
-
-            //HttpContext.Session.Set<UserViewModel>("UserInfo", user);
-
-
-
             return View();
         }
-
-        public async Task<IActionResult> About()
+        [AllowAnonymous]
+        public IActionResult About()
         {
 
-            ApplicationUser user = new ApplicationUser
-            {
-                UserName = "admin",
-                Password = "123456"
-            };
-           //获取访问token
-           AccessTokenModel tokenModel= await ApiHelp.GetAccessTokenAsync("admin","123456", ApiServerAddr);
-
-
-            string strApiUrl = ApiServerAddr + @"/api/v1/manage/queryalluser";
-        
-          
-            string strJson = "";
-
-            HttpContent content = new StringContent(strJson);
-
-            string strRes = await ApiHelp.ApiPostWithTokenAsync(strApiUrl, content,tokenModel.access_token);
-
-            ViewData["Message"] = tokenModel.access_token;
 
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
+    
         public IActionResult Error()
         {
             return View();

@@ -10,6 +10,7 @@ using Tw.Bus.WebApi.Models;
 using Tw.Bus.EntityDTO;
 using Tw.Bus.Entity;
 using Tw.Bus.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tw.Bus.WebApi.Controllers.v1
 {
@@ -34,15 +35,16 @@ namespace Tw.Bus.WebApi.Controllers.v1
             _memoryCache = memoryCache;
         }
 
-
+        
         [Route("SignIn")]
         [HttpPost, MapToApiVersion("1.0")]
-        public async Task<string> SignIn([FromBody]ApplicationUser user)
+        [Authorize]
+        public async Task<string> SignIn([FromBody]LoginUser user)
         {
             UserDto dto = new UserDto();
             try
             {
-                Usy_User entityUser = await _userRepository.FirstOrDefaultAsync(t =>  t.JobNumber == user.JobNumber && t.Pwd == user.Password);
+                Usy_User entityUser = await _userRepository.FirstOrDefaultAsync(t =>  t.JobNumber == user.JobNumber && t.Pwd == user.Pwd);
 
                 if (entityUser != null)
                 {

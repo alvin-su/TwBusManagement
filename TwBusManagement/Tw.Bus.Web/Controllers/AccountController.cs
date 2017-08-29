@@ -9,17 +9,27 @@ using Microsoft.Extensions.Options;
 using System.Net.Http;
 using Tw.Bus.Web.Common;
 using Tw.Bus.EntityDTO;
+using Tw.Bus.Cache;
+using Tw.Bus.Web.Filters;
+using Microsoft.AspNetCore.Http;
 
 namespace Tw.Bus.Web.Controllers
 {
     public class AccountController : Controller
     {
         public string ApiServerAddr { get; private set; }
+
+        public string AppId { get; private set; }
+
+        public string AppKey { get; private set; }
+
         public AccountController(IOptions<ApiServer> option)
         {
             ApiServerAddr = option.Value.Addr;
+            AppId = option.Value.AppId;
+            AppKey = option.Value.AppKey;
         }
-
+        [TwBusAllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
@@ -33,28 +43,28 @@ namespace Tw.Bus.Web.Controllers
                 return View();
             }
         }
-
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(ApplicationUser appUser)
+        public async Task<IActionResult> Login(LoginUser loginVm)
         {
 
             JsonModel jm = new JsonModel();
 
-            if (string.IsNullOrWhiteSpace(appUser.JobNumber.Trim()) || string.IsNullOrWhiteSpace(appUser.Password.Trim()))
+            if (string.IsNullOrWhiteSpace(loginVm.JobNumber.Trim()) || string.IsNullOrWhiteSpace(loginVm.Pwd.Trim()))
             {
                 jm.Statu = "n";
                 jm.Msg = "工号、密码不能为空！";
                 return Json(jm);
             }
 
-            string md5Pwd = SecurityUtility.GetMd5Hash(appUser.Password.Trim()).ToUpper();
+            string md5Pwd = SecurityUtility.GetMd5Hash(loginVm.Pwd.Trim()).ToUpper();
 
-            appUser.Password = md5Pwd;
+            loginVm.Pwd = md5Pwd;
 
             string strApiUrl = ApiServerAddr + @"/api/v1/account/SignIn";
 
-            string strJson = JsonHelper.SerializeObject(appUser);
+            string strJson = JsonHelper.SerializeObject(loginVm);
 
 
             HttpContent content = new StringContent(strJson);
@@ -64,7 +74,7 @@ namespace Tw.Bus.Web.Controllers
 
             try
             {
-                string strRes = await ApiHelp.ApiPostAsync(strApiUrl, content);
+                string strRes = await ApiHelp.ApiPostWithTokenAsync(strApiUrl, content, AccessToken);
 
                 if (strRes.Contains("网络错误") == false)
                 {
@@ -142,6 +152,34 @@ namespace Tw.Bus.Web.Controllers
 
             return Json(1);
             #endregion
+
+        }
+
+        public string AccessToken
+        {
+            get
+            {
+                return GetTokenAsync().Result;
+            }
+        }
+        /// <summary>
+        /// 获取AccessToken
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetTokenAsync()
+        {
+
+            string strToken = HttpContext.Session.GetString("token");
+            if (string.IsNullOrEmpty(strToken))
+            {
+                //获取访问token
+                AccessTokenModel tokenModel = await ApiHelp.GetAccessTokenAsync(AppId, AppKey, ApiServerAddr);
+
+                HttpContext.Session.SetString("token", tokenModel.access_token);
+
+                strToken = tokenModel.access_token;
+            }
+            return strToken;
 
         }
 

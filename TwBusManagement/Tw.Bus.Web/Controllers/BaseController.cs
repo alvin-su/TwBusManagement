@@ -17,6 +17,10 @@ namespace Tw.Bus.Web.Controllers
     {
         public string ApiServerAddr { get; private set; }
 
+        public string AppId { get; private set; }
+
+        public string AppKey { get; private set; }
+
         public readonly IRedisCacheService _redisCache;
 
         public readonly ICacheService _memoryCache;
@@ -24,6 +28,8 @@ namespace Tw.Bus.Web.Controllers
         public BaseController(IOptions<ApiServer> option, IRedisCacheService redisCache, ICacheService memoryCache)
         {
             ApiServerAddr = option.Value.Addr;
+            AppId = option.Value.AppId;
+            AppKey = option.Value.AppKey;
             _redisCache = redisCache;
             _memoryCache = memoryCache;
         }
@@ -61,13 +67,11 @@ namespace Tw.Bus.Web.Controllers
         public async Task<string> GetTokenAsync()
         {
            
-            var user = HttpContext.Session.Get<UserViewModel>("UserInfo");
-
             string strToken = HttpContext.Session.GetString("token");
             if (string.IsNullOrEmpty(strToken))
             {
                 //获取访问token
-                AccessTokenModel tokenModel = await ApiHelp.GetAccessTokenAsync(user.JobNumber, user.Pwd, ApiServerAddr);
+                AccessTokenModel tokenModel = await ApiHelp.GetAccessTokenAsync(AppId, AppKey, ApiServerAddr);
 
                 HttpContext.Session.SetString("token", tokenModel.access_token);
 

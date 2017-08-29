@@ -91,21 +91,20 @@ namespace Tw.Bus.Web.Common
         /// <param name="pwd">密码</param>
         /// <param name="strApiServerAddr">服务端api接口地址</param>
         /// <returns></returns>
-        public static async Task<AccessTokenModel> GetAccessTokenAsync(string userNameOrJobNumber,string pwd,string strApiServerAddr)
+        public static async Task<AccessTokenModel> GetAccessTokenAsync(string appid,string appkey,string strApiServerAddr)
         {
 
-            ApplicationUser user = new ApplicationUser
+            ApplicationUser appUser = new ApplicationUser
             {
-                UserName = userNameOrJobNumber,
-                Password = pwd,
-                JobNumber= userNameOrJobNumber
+                AppId=appid,
+                AppKey=appkey
             };
 
             
 
-            string strJsonUser = JsonHelper.SerializeObject(user);
+            string strJsonAppUser = JsonHelper.SerializeObject(appUser);
 
-            string strJwtCry = Tw.Bus.Common.JwtCryptHelper.EncodeByJwt(strJsonUser);
+            string strJwtCry = Tw.Bus.Common.JwtCryptHelper.EncodeByJwt(strJsonAppUser);
 
             HttpContent content = new StringContent(strJwtCry);
 

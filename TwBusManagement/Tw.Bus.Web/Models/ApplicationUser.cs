@@ -7,9 +7,8 @@ namespace Tw.Bus.Web.Models
 {
     public class ApplicationUser
     {
-        public string UserName { get; set; }
+        public string AppId { get; set; }
 
-        public string JobNumber { get; set; }
-        public string Password { get; set; }
+        public string AppKey { get; set; }
     }
 }

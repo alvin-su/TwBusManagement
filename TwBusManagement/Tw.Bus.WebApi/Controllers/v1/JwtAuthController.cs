@@ -30,13 +30,13 @@ namespace Tw.Bus.WebApi.Controllers.v1
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
-        private readonly IUsyUserRepository _userRepository;
+        private readonly IUsyAppRepository _appRepository;
         /// <summary>
         /// json 序列化方法, 控制器初始化后可以在每个方法返回时使用
         /// </summary>
         private readonly JsonSerializerSettings _seriallizerSettings;
 
-        public JwtAuthController(IOptions<JwtIssuerOptions> jwtoptions, IUsyUserRepository userRepository)
+        public JwtAuthController(IOptions<JwtIssuerOptions> jwtoptions, IUsyAppRepository appRepository)
         {
             _jwtOptions = jwtoptions.Value;
             ThrowIfInvalidOptions(_jwtOptions); //验证jwt配置是否合法
@@ -46,7 +46,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
                 Formatting = Formatting.Indented
             };
 
-            _userRepository = userRepository;
+            _appRepository = appRepository;
         }
         /// <summary>
         /// 验证jwt配置是否合法
@@ -95,7 +95,7 @@ namespace Tw.Bus.WebApi.Controllers.v1
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, applicationUser.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, applicationUser.AppId),
                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssueAt).ToString(), ClaimValueTypes.Integer64),
                 identity.FindFirst("LoginCharacter")
@@ -134,19 +134,19 @@ namespace Tw.Bus.WebApi.Controllers.v1
         /// <summary>
         /// 登录验证操作
         /// </summary>
-        /// <param name="user">用户</param>
+        /// <param name="appUser">用户</param>
         /// <returns>带有权限的对象</returns>
         /// <remarks>此方法为验证方法, 在正式项目中作为授权和配置权限使用, 注意与start up中的权限对应</remarks>
-        private async Task<ClaimsIdentity> LoginValidate(ApplicationUser user)
+        private async Task<ClaimsIdentity> LoginValidate(ApplicationUser appUser)
         {
-            Usy_User entityUser = await _userRepository.FirstOrDefaultAsync(t => t.JobNumber.Trim()==user.JobNumber.Trim() && t.Pwd == user.Password.Trim());
+            Usy_App entityApp = await _appRepository.FirstOrDefaultAsync(t => t.AppId.Trim()== appUser.AppId.Trim() && t.AppKey == appUser.AppKey.Trim());
 
-            if (entityUser != null)
+            if (entityApp != null)
             {
-                return await Task.FromResult(new ClaimsIdentity(new GenericIdentity(entityUser.UserName, "Token"),
+                return await Task.FromResult(new ClaimsIdentity(new GenericIdentity(entityApp.AppId, "Token"),
                     new[]
                     {
-                        new Claim("LoginCharacter",entityUser.UserName)
+                        new Claim("LoginCharacter",entityApp.AppId)
                     }));
             }
 

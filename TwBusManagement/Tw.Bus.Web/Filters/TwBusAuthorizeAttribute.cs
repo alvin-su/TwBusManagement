@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Tw.Bus.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tw.Bus.Web.Filters
 {
@@ -13,11 +14,8 @@ namespace Tw.Bus.Web.Filters
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            // throw new NotImplementedException();
-
 
             string strUrl = "";
-
 
             strUrl = context.HttpContext.Request.Path.Value;
 
@@ -57,6 +55,31 @@ namespace Tw.Bus.Web.Filters
                 return;
             }
             #endregion
+
+            return;
+            //判断类或方法上是否应用了“AllowAnonymousAttribute”特性，该特性表示要跳过权限认证
+
+            bool b = context.ActionDescriptor.FilterDescriptors.Any(t => t.Filter.ToString() == "Microsoft.AspNetCore.Mvc.Authorization.AllowAnonymousFilter");
+            if (b)
+            {
+                return;
+            }
+
+
+            string strControllerName = "";
+
+            string strActionName = "";
+
+            //获取控制器名称
+            context.ActionDescriptor.RouteValues.TryGetValue("controller", out strControllerName);
+
+            //获取操作名称
+            context.ActionDescriptor.RouteValues.TryGetValue("action", out strActionName);
+
+            string str = context.HttpContext.Request.Method;
+
+        
+          //  base.OnActionExecuting(filterContext);
 
         }
     }
