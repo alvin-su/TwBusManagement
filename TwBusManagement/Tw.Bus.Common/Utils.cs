@@ -33,7 +33,9 @@ namespace Tw.Bus.Common
                 return ex.Message;
             }
             else
+            {
                 return ex.InnerException.Message;
+            }
         }
         #endregion
         #endregion
