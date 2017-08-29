@@ -265,3 +265,6 @@ __pycache__/
 /TwBusManagement/Tw.Bus.WebApi/wwwroot
 /TwBusManagement/Tw.Bus.WebApi/bower.json
 /TwBusManagement/Tw.Bus.WebApi/bundleconfig.json
+/TwBusManagement/Tw.Bus.WebApi/appsettings.json
+/TwBusManagement/Tw.Bus.WebApi/appsettings.json
+/TwBusManagement/Tw.Bus.Web/appsettings.json

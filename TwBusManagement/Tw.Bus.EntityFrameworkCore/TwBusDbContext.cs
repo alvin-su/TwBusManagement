@@ -37,5 +37,7 @@ namespace Tw.Bus.EntityFrameworkCore
         /// 角色Action权限
         /// </summary>
         public virtual DbSet<Usy_RoleActionPermission> UsyRoleActionPermissions { get; set; }
+
+        public virtual DbSet<Usy_App> UsyApps { get; set; }
     }
 }

@@ -1,0 +1,65 @@
+﻿
+@model Sakura.AspNetCore.IPagedList<Tw.Bus.EntityDTO.AppDto>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>应用ID</th>
+            <th>应用名称</th>
+            <th>应用状态</th>
+            <th>应用类型</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                     <a href="javascript:void(0);" onclick="">@item.AppId</a> 
+                    </td>
+                    <td>@item.AppName</td>
+                    @if (item.AppStatus == 0)
+                    {
+                        <td>未审核</td>
+                    }
+                    else
+                    {
+                        <td>已审核</td>
+                    }
+                    <td>@item.AppType</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown">
+                                操作 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a asp-controller="Home" asp-action="Edit" asp-route-id="@item.id">编辑</a></li>
+                                <li><a href="javascript:void(0);" onclick="Delete('@item.id')">删除</a></li>
+                                @*<li class="divider"></li>
+                                <li><a href="#">分离的链接</a></li>*@
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td align="center" colspan="5">
+                    暂无记录
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<ul class="pagination">
+    <pager setting-link-attr-data-ajax="true" setting-link-attr-data-ajax-update="#applist" setting-link-attr-data-ajax-searchForm="#SearchForm" generation-mode="ListOnly" />
+</ul>
+<div style="padding-top:10px; float:right">
+    当前：@Model.PageIndex 页 总共：@Model.TotalPage 页
+</div>

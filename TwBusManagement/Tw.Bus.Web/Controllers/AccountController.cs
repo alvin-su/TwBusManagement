@@ -111,7 +111,7 @@ namespace Tw.Bus.Web.Controllers
 
                     HttpContext.Session.Set<Models.UserViewModel>("UserInfo", vm);
                     jm.Statu = "y";
-                    jm.Msg = "y";
+                    jm.Msg = "登录成功";
                   
                 }
                 else

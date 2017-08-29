@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Talkweb班车管理API应用接入</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="~/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/AdminLTE.min.css">
+
+
+
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="~/dist/css/skins/_all-skins.min.css">
+
+    <link href="~/css/beyond.min.css" rel="stylesheet" />
+
+    <!--头部CSS-->
+    @RenderSection("headCssSection", false)
+</head>
+
+@{ var UserInfo = new Tw.Bus.AppRegister.Models.UserViewModel();
+    UserInfo = Context.Session.Get<Tw.Bus.AppRegister.Models.UserViewModel>("UserInfo");
+}
+<!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+<body class="hold-transition skin-blue layout-top-nav">
+
+    <!-- Loading Container -->
+    <div class="loading-container loading-inactive">
+        <div class="loading-progress">
+            <div class="rotator">
+                <div class="rotator">
+                    <div class="rotator colored">
+                        <div class="rotator">
+                            <div class="rotator colored">
+                                <div class="rotator colored"></div>
+                                <div class="rotator"></div>
+                            </div>
+                            <div class="rotator colored">
+
+                            </div>
+                        </div>
+                        <div class="rotator"></div>
+                    </div>
+                    <div class="rotator"></div>
+                </div>
+                <div class="rotator"></div>
+            </div>
+            <div class="rotator"></div>
+        </div>
+    </div>
+    <!--  /Loading Container -->
+
+    <div class="wrapper">
+        <header class="main-header">
+            <nav class="navbar navbar-static-top">
+                <div style="padding-right: 15px; padding-left: 15px;margin-right: auto;margin-left: auto;">
+                    <div class="navbar-header" style="font-size:18px;">
+                        <a href="#" class="navbar-brand" style="padding-top:12px;padding-right:5px;font-size:large"><b>Talkweb</b>班车管理API应用接入</a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">应用管理 <span class="sr-only">(current)</span></a></li>
+                            <li><a href="#">Link</a></li>
+                            @*<li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Action</a></li>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">One more separated link</a></li>
+                                    </ul>
+                                </li>*@
+                        </ul>
+
+                    </div>
+                    <!-- /.navbar-collapse -->
+                    <!-- Navbar Right Menu -->
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+
+                            <!-- User Account Menu -->
+                            <li class="dropdown user user-menu">
+                                <!-- Menu Toggle Button -->
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <!-- The user image in the navbar-->
+                                    <img src="~/dist/img/user_alvinsu.png" class="user-image" alt="User Image">
+                                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                    <span class="hidden-xs">@UserInfo.UserName</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- The user image in the menu -->
+                                    <li class="user-header">
+                                        <img src="~/dist/img/user_alvinsu.png" class="img-circle" alt="User Image">
+                                        <p>
+                                            Alvin_su .NET DeveLoper
+                                            <small>.NET、.NET Core</small>
+                                        </p>
+                                    </li>
+                                   
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                @*<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>*@
+                                <a href="#" onclick="Logout()"><i class="fa fa-power-off" style="font-size:22px;"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-custom-menu -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+        </header>
+        <!-- Full Width Column -->
+        <div class="content-wrapper">
+            <div class="container">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+
+                    @RenderSection("placeTitleSection", required: false)
+                </section>
+                <!-- Main content -->
+                <section class="content">
+
+                    @RenderBody()
+
+                </section>
+                <!-- /.content -->
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div>
+                <div class="pull-right hidden-xs">
+                    <b>Version</b>1.0
+                </div>
+                <strong>Copyright &copy; 2017 <a href="#">Alvin_su</a>.</strong> All rights
+                reserved.
+            </div>
+
+        </footer>
+
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery 3 -->
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="~/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+
+
+
+    <script src="~/js/bootbox/bootbox.js"></script>
+    <script src="~/js/toastr/toastr.js"></script>
+    <script src="~/js/common.js?ver=1.0"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/dist/js/demo.js"></script>
+
+
+
+    @RenderSection("scriptSection", required: false)
+</body>
+</html>
+<script type="text/javascript">
+    function Logout() {
+        bootbox.confirm("确定注销退出系统吗？", function (result) {
+            if (result) {
+                        var actionUrl = "@Url.Action("Logout", "Account")";
+                        ///cas模式下登陆注释下面第一行，并取消下面第二行的注释
+                       //window.location.replace(actionUrl);
+                        $.post(actionUrl,
+                          function (data) {
+                              if (data == "1") {
+                                  actionUrl = "@Url.Action("Login","Account")";
+
+                                  window.location.replace(actionUrl);
+                                  //document.location.href = actionUrl;
+                              }
+                          }, "text");
+                    }
+        });
+    };
+</script>
