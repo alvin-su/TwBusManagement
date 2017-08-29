@@ -1,13 +1,25 @@
 ﻿
 @model Sakura.AspNetCore.IPagedList<Tw.Bus.EntityDTO.AppDto>
 
+<script type="text/javascript">
+
+    function ShowMsg(appid,appkey) { 
+
+        var html = "<p><span>应用ID：</sapn>" + appid + "</p>"
+            + "<p><span>AppKey：</sapn>" + appkey + "</p>"
+
+        ShowModalInfo("应用信息", html);
+    }
+
+</script>
+
 <table class="table table-hover">
     <thead>
         <tr>
-            <th>应用ID</th>
             <th>应用名称</th>
             <th>应用状态</th>
             <th>应用类型</th>
+            <th>应用备注</th>
             <th>操作</th>
         </tr>
     </thead>
@@ -18,9 +30,8 @@
             {
                 <tr>
                     <td>
-                     <a href="javascript:void(0);" onclick="">@item.AppId</a> 
+                     <a href="javascript:void(0);" onclick="ShowMsg('@item.AppId','@item.AppKey')" >@item.AppName</a> 
                     </td>
-                    <td>@item.AppName</td>
                     @if (item.AppStatus == 0)
                     {
                         <td>未审核</td>
@@ -30,6 +41,7 @@
                         <td>已审核</td>
                     }
                     <td>@item.AppType</td>
+                    <td>@item.Remark</td>
                     <td>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle"
@@ -37,7 +49,7 @@
                                 操作 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a asp-controller="Home" asp-action="Edit" asp-route-id="@item.id">编辑</a></li>
+                                <li><a href="javascript:void(0);" onclick="EditApp('@item.id')">编辑</a></li>
                                 <li><a href="javascript:void(0);" onclick="Delete('@item.id')">删除</a></li>
                                 @*<li class="divider"></li>
                                 <li><a href="#">分离的链接</a></li>*@

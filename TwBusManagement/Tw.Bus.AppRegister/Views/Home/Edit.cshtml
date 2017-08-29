@@ -1,34 +1,31 @@
 ﻿
 @{
     ViewData["Title"] = "修改应用";
+    Layout = null;
 }
+
 @model Tw.Bus.EntityDTO.AppDto
-@section headCssSection{
 
-    <!-- iCheck -->
-    <link rel="stylesheet" href="~/plugins/iCheck/square/blue.css">
+<script type="text/javascript">
 
-    <link href="~/css/Validform.css" rel="stylesheet" />
+        $(function () {
 
-}
-
-@section scriptSection{
-
-    <script src="~/js/jquery.unobtrusive-ajax.js"></script>
-
-    <!-- iCheck -->
-    <script src="~/plugins/iCheck/icheck.min.js"></script>
-
-    <script src="~/js/Validform_v5.3.2_min.js"></script>
-
-    <script type="text/javascript">
-
-          $(function () {
-              $('input').iCheck({
+             $('input').iCheck({
                   checkboxClass: 'icheckbox_square-blue',
                   radioClass: 'iradio_square-blue',
                   increaseArea: '20%' // optional
               });
+
+               $('#ckAppStatus').on('ifChecked', function (event) {
+
+                   $("#AppStatus").val(1);
+
+               });
+               $('#ckAppStatus').on('ifUnchecked', function (event) {
+
+                   $("#AppStatus").val(0);
+
+               });
 
               $("#editForm").Validform({
                   tiptype: 4,
@@ -53,49 +50,14 @@
                   },
               });
 
+        })
 
-           //   $("#ckAppStatus").click(Function())
+</script>
 
-              $('#ckAppStatus').on('ifChecked', function (event) {
-
-                  $("#AppStatus").val(1);
-
-              });
-              $('#ckAppStatus').on('ifUnchecked', function (event) {
-
-                  $("#AppStatus").val(0);
-
-              });
-
-
-          })
-
-    </script>
-
-}
-
-@section placeTitleSection{
-
-    <h1>
-        添加应用
-        @*<small>已接入的应用列表</small>*@
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i>应用管理</a></li>
-        <li><a href="/Home/Index">应用列表</a></li>
-        <li><a href="#" class="active">编辑应用</a></li>
-    </ol>
-}
 <div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title"></h3>
 
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
-                <i class="fa fa-minus"></i>
-            </button>
-
-        </div>
     </div>
     <!-- /.box-header -->
     <!-- form start -->
@@ -152,7 +114,7 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
-            <button type="submit" class="btn btn-default">取消</button>
+            <button type="reset" class="btn btn-default">重置</button>
             <button type="submit" class="btn btn-info pull-right">确定</button>
         </div>
         <!-- /.box-footer -->

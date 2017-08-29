@@ -7,7 +7,9 @@
 
 @section headCssSection{
 
+<link rel="stylesheet" href="~/plugins/iCheck/square/blue.css">
 
+<link href="~/css/Validform.css" rel="stylesheet" />
 
 }
 
@@ -15,9 +17,22 @@
 
     <script src="~/js/jquery.unobtrusive-ajax.js"></script>
 
+       <!-- iCheck -->
+<script src="~/plugins/iCheck/icheck.min.js"></script>
 
+<script src="~/js/Validform_v5.3.2_min.js"></script>
 
     <script type="text/javascript">
+
+          function addApp(){
+            var url = '@Url.Action("Add","Home")';
+            ShowDialogModal2(url,'新增应用','m');
+        };
+
+        function EditApp(id) {
+            var url = '@Url.Action("Edit","Home")?id=' + id;
+            ShowDialogModal2(url,'编辑应用','m');
+        };
 
           $(function () {
 
@@ -26,7 +41,9 @@
                   var form = $(this).parents().find("form")
                   debugger;
                   form.submit();
-              })
+              });
+
+              
           });
 
           function Delete(id) {
@@ -48,11 +65,13 @@
                         error: function (error) {
 
                         }
-                    })
-                }
+                      })
+                  }
 
-            });
-        };
+              });
+          };
+
+
 
     </script>
 
@@ -83,7 +102,7 @@
     </div>
     <div class="box-body" style="display: block;">
         <div style="float:right">
-            <a href='@Url.Action("Add","Home")' class="btn btn-success btn-default"><i class="fa fa-plus"></i> 添加应用</a>
+            <a href="javascript:void(0);" class="btn btn-success btn-default" onclick="addApp()"><i class="fa fa-plus"></i>添加应用</a>
         </div>
 
         <div class="col-xs-12">
@@ -121,4 +140,6 @@
     </div>
     <!-- /.box-footer-->
 </div>
+
+
 

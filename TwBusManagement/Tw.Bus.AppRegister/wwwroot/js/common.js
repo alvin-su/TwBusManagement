@@ -97,7 +97,6 @@ function ShowDialogModal(obj) {
         $("#myModalContent").html(data);
         $('#MyLargeDialogModal').modal('show');//
 
-     
     });
 }
 
@@ -161,7 +160,16 @@ function ShowDialogModal2(url, title, widthcss, id) {
        
     });
 }
+//弹出消息框
+function ShowModalInfo(title,html) {
 
+    $(".modal-title", $("#modal-info")).text(title);
+    $(".modal-body", $("#modal-info")).html("");
+
+    $(".modal-body", $("#modal-info")).html(html);
+    $("#modal-info").modal('show');
+
+}
 
 
 function ShowDialogModal3(url, title, width) {
