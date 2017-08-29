@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tw.Bus.Entity;
@@ -23,9 +24,9 @@ namespace Tw.Bus.EntityFrameworkCore
                 {
 
                     //查找角色
-                   // List<Usy_User_Role> lstRole = _dbContext.UsyUserRoles.Where(t => t.UserId == model.Id).ToList();
+                    List<Usy_User_Role> lstRole = _dbContext.UsyUserRoles.Where(t => t.UserId == model.id).ToList();
 
-                  //  lstRole.ForEach(t => model.LstRoleID.Add(t.RoleId.Value));
+                    lstRole.ForEach(t => model.LstRoleID.Add(t.RoleId.Value));
                 }
             }
             catch (Exception)
