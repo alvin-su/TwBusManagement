@@ -33,9 +33,7 @@ namespace Tw.Bus.AppRegister.Controllers
         public IActionResult Login()
         {
           
-            //log.Info("GetCurrentDirectory:" + Directory.GetCurrentDirectory());
-            //log.Info(_env.EnvironmentName);
-            //log.Info("ContentRootPath:"+_env.ContentRootPath);
+            
 
             if (HttpContext.Session.Get<UserViewModel>("UserInfo") != null)
             {

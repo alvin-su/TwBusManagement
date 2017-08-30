@@ -14,6 +14,8 @@ using Sakura.AspNetCore;
 using Tw.Bus.EntityDTO;
 using Tw.Bus.AppRegister.Filters;
 using Tw.Bus.Common;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Tw.Bus.AppRegister.Controllers
 {
@@ -28,16 +30,23 @@ namespace Tw.Bus.AppRegister.Controllers
 
         private readonly ICacheService _memoryCache;
 
-        public HomeController(IUsyAppRepository appRepository, IRedisCacheService redisCache, ICacheService memoryCache)
+        private readonly IHostingEnvironment _env;
+
+        public HomeController(IUsyAppRepository appRepository, IRedisCacheService redisCache, ICacheService memoryCache, IHostingEnvironment env)
         {
             log = LogManager.GetLogger(Startup.log4netRepository.Name, typeof(HomeController));
             _appRepository = appRepository;
             _redisCache = redisCache;
             _memoryCache = memoryCache;
+            _env = env;
 
         }
         public async Task<IActionResult> Index(int page = 1, string kword = "", int pageSize = 2)
         {
+
+            //log.Info("GetCurrentDirectory:" + Directory.GetCurrentDirectory());
+            //log.Info(_env.EnvironmentName);
+            //log.Info("ContentRootPath:" + _env.ContentRootPath);
 
             List<AppDto> lst = new List<AppDto>();
 

@@ -142,13 +142,19 @@ namespace Tw.Bus.AppRegister
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            //下面代码 发布到 linux centos7时需要取消注释
+            //下面代码 发布到 linux centos7时需要取消注释,也可采用下面的代码
             //var staticfile = new StaticFileOptions();
             //string wwwrootPath= Path.Combine(env.ContentRootPath, "wwwroot");
             //staticfile.FileProvider = new PhysicalFileProvider(wwwrootPath);
             //app.UseStaticFiles(staticfile);
 
-            //下面代码发布到 linux centos7时需要注释并用上面代码替换
+
+            string wwwrootPath= Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "wwwroot");
+
+            if (Directory.Exists(wwwrootPath)) //发布到 linux centos7时需要
+            {
+                env.WebRootFileProvider = new PhysicalFileProvider(wwwrootPath);
+            }
             app.UseStaticFiles();
 
             app.UseSession();
