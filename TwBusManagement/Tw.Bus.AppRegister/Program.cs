@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.Reflection;
 
 namespace Tw.Bus.AppRegister
 {
@@ -14,12 +16,20 @@ namespace Tw.Bus.AppRegister
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var config = new ConfigurationBuilder()
+              .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
+              .AddJsonFile("hosting.json", optional: true)
+              .Build();
+
+            BuildWebHost(args,config).Run();
+
+          
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHost BuildWebHost(string[] args, IConfigurationRoot config) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseConfiguration(config)
                 .Build();
     }
 }

@@ -354,7 +354,7 @@
 
     <script src="~/js/bootbox/bootbox.js"></script>
     <script src="~/js/toastr/toastr.js"></script>
-    <script src="~/js/common.js"></script>
+    <script src="~/js/common.js?ver=1"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="~/dist/js/demo.js"></script>
 
@@ -362,11 +362,65 @@
     @RenderSection("scriptSection", required: false)
 
 
-
 </body>
 
-
 </html>
+
+
+<!--Modal Templates-->
+<div id="MyLargeDialogModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="mySmallModalLabel">Test</h4>
+            </div>
+            <div class="modal-body" id="myModalContent">
+                modal
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!--警告框-->
+<div id="modal-warning_layout" class="modal modal-message modal-warning fade" style="display: none;" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-warning"></i>
+            </div>
+
+            <div class="modal-body">Is something wrong?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" onclick="CloseAlertForm('#modal-warning_layout')">确定</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div>
+
+<!-- .modal -->
+<div class="modal modal-info fade" id="modal-info">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Info Modal</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 <script type="text/javascript">
 

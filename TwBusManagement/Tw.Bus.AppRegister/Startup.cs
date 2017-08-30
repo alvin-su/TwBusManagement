@@ -22,15 +22,34 @@ using Microsoft.Extensions.Caching.Redis;
 using Tw.Bus.IRepository;
 using Sakura.AspNetCore.Mvc;
 using Tw.Bus.AppRegister.Filters;
+using Microsoft.Extensions.FileProviders;
 
 namespace Tw.Bus.AppRegister
 {
     public class Startup
     {
         public static ILoggerRepository log4netRepository { get; set; }
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
+#if DEBUG
+            env.EnvironmentName = EnvironmentName.Development;
+#else
+            env.EnvironmentName = EnvironmentName.Production;
+#endif
+
+            env.ContentRootPath = PlatformServices.Default.Application.ApplicationBasePath;
+
             Configuration = configuration;
+
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(env.ContentRootPath)
+               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+               .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+               .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+
+            
 
             //初始化实体映射关系
             Mapper.Initialize(cfg =>
@@ -77,7 +96,7 @@ namespace Tw.Bus.AppRegister
                 options.Filters.Add<TwBusExceptionFilter>();
             });
 
-            //添加Redis分布式缓存
+            ////添加Redis分布式缓存
             services.AddSingleton(typeof(IRedisCacheService), new RedisCacheService(new RedisCacheOptions
             {
                 Configuration = Configuration.GetConnectionString("RedisConnection"),
@@ -111,11 +130,6 @@ namespace Tw.Bus.AppRegister
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-           #if DEBUG
-            env.EnvironmentName = EnvironmentName.Development;
-           #else
-            env.EnvironmentName = EnvironmentName.Production;
-           #endif
 
 
             if (env.IsDevelopment())
@@ -128,6 +142,13 @@ namespace Tw.Bus.AppRegister
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            //下面代码 发布到 linux centos7时需要取消注释
+            //var staticfile = new StaticFileOptions();
+            //string wwwrootPath= Path.Combine(env.ContentRootPath, "wwwroot");
+            //staticfile.FileProvider = new PhysicalFileProvider(wwwrootPath);
+            //app.UseStaticFiles(staticfile);
+
+            //下面代码发布到 linux centos7时需要注释并用上面代码替换
             app.UseStaticFiles();
 
             app.UseSession();

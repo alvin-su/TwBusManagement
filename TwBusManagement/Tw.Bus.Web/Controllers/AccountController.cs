@@ -29,7 +29,6 @@ namespace Tw.Bus.Web.Controllers
             AppId = option.Value.AppId;
             AppKey = option.Value.AppKey;
         }
-        [TwBusAllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {

@@ -9,6 +9,8 @@ using Tw.Bus.EntityDTO;
 using Tw.Bus.IRepository;
 using log4net;
 using Tw.Bus.AppRegister.Filters;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Tw.Bus.AppRegister.Controllers
 {
@@ -17,16 +19,24 @@ namespace Tw.Bus.AppRegister.Controllers
         private static readonly ILog log = LogManager.GetLogger(Startup.log4netRepository.Name, typeof(AccountController));
 
         private readonly IUsyUserRepository _userRepository;
-        public AccountController(IUsyUserRepository userRepository)
+
+        private readonly IHostingEnvironment _env;
+
+        public AccountController(IUsyUserRepository userRepository, IHostingEnvironment env)
         {
             _userRepository = userRepository;
+            _env = env;
         }
 
       //  [TwBusException]
         [HttpGet]
         public IActionResult Login()
         {
-         
+          
+            //log.Info("GetCurrentDirectory:" + Directory.GetCurrentDirectory());
+            //log.Info(_env.EnvironmentName);
+            //log.Info("ContentRootPath:"+_env.ContentRootPath);
+
             if (HttpContext.Session.Get<UserViewModel>("UserInfo") != null)
             {
                 return RedirectToAction("Index", "Home");
